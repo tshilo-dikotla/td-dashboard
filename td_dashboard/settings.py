@@ -10,10 +10,20 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
+import configparser
 import os
+from pathlib import PurePath
+import sys
+
+from django.core.management.color import color_style
+
+
+style = color_style()
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+APP_NAME = 'td_dashboard'
 
 
 # Quick-start development settings - unsuitable for production
@@ -25,8 +35,22 @@ SECRET_KEY = 'e2ina7ivuxk(5r7v@^3oos6^c@a@ebojq5hbf+jw0)3a4erri*'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+CONFIG_FILE = '{}.conf'.format(APP_NAME)
+if DEBUG:
+    ETC_DIR = str(PurePath(BASE_DIR).joinpath('etc'))
+else:
+    ETC_DIR = '/etc'
 
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+
+CONFIG_PATH = os.path.join(ETC_DIR, APP_NAME, CONFIG_FILE)
+sys.stdout.write(style.SUCCESS('Reading config from {}\n'.format(CONFIG_PATH)))
+
+config = configparser.RawConfigParser()
+config.read(os.path.join(CONFIG_PATH))
+
+
+SITE_ID = 1
 
 # Application definition
 
@@ -37,6 +61,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'td_dashboard.apps.AppConfig'
 ]
 
 MIDDLEWARE = [
@@ -47,6 +72,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'edc_dashboard.middleware.DashboardMiddleware',
+    'edc_subject_dashboard.middleware.DashboardMiddleware',
+    'edc_lab_dashboard.middleware.DashboardMiddleware'
+
 ]
 
 ROOT_URLCONF = 'td_dashboard.urls'
@@ -118,3 +147,32 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+DASHBOARD_URL_NAMES = {
+    'subject_listboard_url': 'td_dashboard:subject_listboard_url',
+    'screening_listboard_url': 'td_dashboard:screening_listboard_url',
+    'subject_dashboard_url': 'td_dashboard:subject_dashboard_url',
+}
+
+DASHBOARD_BASE_TEMPLATES = {
+    'listboard_base_template': 'cancer/base.html',
+    'dashboard_base_template': 'cancer/base.html',
+    'screening_listboard_template': 'td_dashboard/screening/listboard.html',
+    'subject_listboard_template': 'td_dashboard/subject/listboard.html',
+    'subject_dashboard_template': 'td_dashboard/subject/dashboard.html',
+}
+
+
+if 'test' in sys.argv:
+
+    class DisableMigrations:
+
+        def __contains__(self, item):
+            return True
+
+        def __getitem__(self, item):
+            return None
+
+    MIGRATION_MODULES = DisableMigrations()
+    PASSWORD_HASHERS = ('django.contrib.auth.hashers.MD5PasswordHasher', )
+    DEFAULT_FILE_STORAGE = 'inmemorystorage.InMemoryStorage'

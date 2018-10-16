@@ -1,0 +1,1 @@
+git+https://github.com/botswana-harvard/edc-appointment.git@develop#egg=edc_appointment
