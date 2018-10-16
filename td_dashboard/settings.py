@@ -149,17 +149,17 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 DASHBOARD_URL_NAMES = {
-    'subject_listboard_url': 'td_dashboard:subject_listboard_url',
-    'screening_listboard_url': 'td_dashboard:screening_listboard_url',
-    'subject_dashboard_url': 'td_dashboard:subject_dashboard_url',
+    'maternal_subject_listboard_url': 'td_dashboard:maternal_subject_listboard_url',
+    'maternal_eligibility_listboard_url': 'td_dashboard:maternal_eligibility_listboard_url',
+    'maternal_subject_dashboard_url': 'td_dashboard:maternal_subject_dashboard_url',
 }
 
 DASHBOARD_BASE_TEMPLATES = {
     'listboard_base_template': 'cancer/base.html',
     'dashboard_base_template': 'cancer/base.html',
-    'screening_listboard_template': 'td_dashboard/screening/listboard.html',
-    'subject_listboard_template': 'td_dashboard/subject/listboard.html',
-    'subject_dashboard_template': 'td_dashboard/subject/dashboard.html',
+    'maternal_eligibility_listboard_template': 'td_dashboard/maternal_eligibility/listboard.html',
+    'maternal_subject_listboard_template': 'td_dashboard/maternal_subject/listboard.html',
+    'maternal_subject_dashboard_template': 'td_dashboard/maternal_subject/dashboard.html',
 }
 
 

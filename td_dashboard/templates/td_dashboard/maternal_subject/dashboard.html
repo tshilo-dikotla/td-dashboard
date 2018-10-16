@@ -1,0 +1,25 @@
+{% extends 'edc_subject_dashboard/dashboard.html' %}
+
+{% load staticfiles %}
+
+{% block locator_information %}{% endblock locator_information %}
+
+{% block top_bar %}
+
+    {% include "td_dashboard/maternal_subject/dashboard/top_bar.html" %}
+
+{% endblock top_bar %}
+
+
+{% block side_bar %}
+	{{ block.super }}
+	
+    <div class="panel panel-default">
+      <div class="panel-heading">
+          <h6 class="panel-title">
+              <i class="fa fa-random fa-lg fa-fw"></i> Randomization
+          </h6>
+      </div>
+  </div>
+    </div>
+{% endblock side_bar %}
