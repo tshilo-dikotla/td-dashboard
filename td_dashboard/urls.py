@@ -34,17 +34,14 @@ urlpatterns += subject_listboard_url_config.listboard_urls
 urlpatterns += screening_listboard_url_config.listboard_urls
 urlpatterns += subject_dashboard_url_config.dashboard_urls
 
-if settings.APP_NAME == 'ambition_dashboard':
+if settings.APP_NAME == 'td_dashboard':
 
     from django.views.generic.base import RedirectView
-    from edc_base.views import LoginView, LogoutView
-
-    from .tests.admin import ambition_test_admin
+    from edc_base.auth.views import LoginView, LogoutView
 
     urlpatterns += [
         path('edc_device/', include('edc_device.urls')),
         path('edc_protocol/', include('edc_protocol.urls')),
-        path('admin/', ambition_test_admin.urls),
         path('admininistration/', RedirectView.as_view(url='admin/'),
              name='administration_url'),
         path('login', LoginView.as_view(), name='login_url'),
