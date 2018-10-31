@@ -5,8 +5,12 @@
              
 {% block listboard_panel %}
     <a id="maternaleligibility_add" title="add eligibility" class="btn btn-sm btn-default" role="button" 
-        href="{{ maternaleligibility_add_url }}?next={{ maternal_eligibility_listboard_url }}">
+        href="{{ maternal_eligibility_add_url }}?next={{ maternal_eligibility_listboard_url }}">
             <i class="fa fa-plus fa-sm"></i> Add Maternal Eligibility
+    </a>
+    <a id="return_to_home" title="go back" class="btn btn-sm btn-default" role="button" 
+        href="/">
+            <i class="fa fa-arrow-left fa-sm"></i> Go Back
     </a>
 {% endblock listboard_panel %}
 
@@ -30,7 +34,7 @@
     <div class="btn-group">
     {% screening_button result %}
     {% eligibility_button result %}
-    {% if result.eligible %}
+    {% if result.is_eligible %}
         {% if result.consent %}
             {% dashboard_button result %}
         {% else %}
@@ -44,7 +48,7 @@
 
 {% block listboard_table_columns %}
 
-    <td>{{ result.screening_identifier }} </td>
+    <td>{{ result.eligibility_id }} </td>
     <td nowrap>{% if "092" in result.consent.subject_identifier %}{{ result.consent.subject_identifier }}{% endif %}</td>
     <td nowrap>{{ result.age_in_years }} yrs</td>
     <td nowrap>{{ result.user_created }}</td>
