@@ -17,7 +17,7 @@ class DashboardView(
     dashboard_template = 'maternal_subject_dashboard_template'
     appointment_model = 'edc_appointment.appointment'
     appointment_model_wrapper_cls = AppointmentModelWrapper
-    consent_model = 'td_maternal.maternalconsent'
+    consent_model = 'td_maternal.subjectconsent'
     consent_model_wrapper_cls = MaternalConsentModelWrapper
     navbar_name = 'td_dashboard'
     navbar_selected_item = 'consented_subject'

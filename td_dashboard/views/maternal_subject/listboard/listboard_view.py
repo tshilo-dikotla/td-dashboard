@@ -18,7 +18,7 @@ class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
     listboard_panel_style = 'success'
     listboard_fa_icon = "far fa-user-circle"
 
-    model = 'ambition_subject.subjectconsent'
+    model = 'td_maternal.subjectconsent'
     model_wrapper_cls = MaternalConsentModelWrapper
     navbar_name = 'td_dashboard'
     navbar_selected_item = 'consented_subject'

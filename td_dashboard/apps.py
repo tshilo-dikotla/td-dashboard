@@ -4,8 +4,8 @@ from django.conf import settings
 
 class AppConfig(DjangoAppConfig):
     name = 'td_dashboard'
-    admin_site_name = 'td_test_admin'
-    include_in_administration_section = False
+    admin_site_name = 'td_maternal_admin'
+#     include_in_administration_section = False
 
 
 if settings.APP_NAME == 'td_dashboard':
