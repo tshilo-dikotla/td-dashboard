@@ -157,7 +157,7 @@ DASHBOARD_URL_NAMES = {
 DASHBOARD_BASE_TEMPLATES = {
     'listboard_base_template': 'cancer/base.html',
     'dashboard_base_template': 'cancer/base.html',
-    'maternal_eligibility_listboard_template': 'td_dashboard/maternal_eligibility/listboard.html',
+    'maternal_eligibility_listboard_template': 'td_dashboard/subject_screening/listboard.html',
     'maternal_subject_listboard_template': 'td_dashboard/maternal_subject/listboard.html',
     'maternal_subject_dashboard_template': 'td_dashboard/maternal_subject/dashboard.html',
 }
