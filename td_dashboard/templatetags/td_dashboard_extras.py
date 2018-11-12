@@ -9,7 +9,7 @@ register = template.Library()
 def screening_button(model_wrapper):
     title = ['Edit subject\' screening form.']
     return dict(
-        screening_identifier=model_wrapper.object.eligibility_id,
+        screening_identifier=model_wrapper.object.screening_identifier,
         href=model_wrapper.href,
         title=' '.join(title))
 
@@ -31,7 +31,7 @@ def consent_button(model_wrapper):
     title = ['Consent subject to participate.']
     consent_version = model_wrapper.consent.version
     return dict(
-        screening_identifier=model_wrapper.object.eligibility_id,
+        screening_identifier=model_wrapper.object.screening_identifier,
         add_consent_href=model_wrapper.consent.href,
         consent_version=consent_version,
         title=' '.join(title))
@@ -43,4 +43,4 @@ def dashboard_button(model_wrapper):
         'subject_dashboard_url')
     return dict(
         subject_dashboard_url=subject_dashboard_url,
-        subject_identifier=model_wrapper.eligibility_id)
+        subject_identifier=model_wrapper.screening_identifier)
