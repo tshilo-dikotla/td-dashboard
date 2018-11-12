@@ -7,17 +7,17 @@ from edc_model_wrapper import ModelWrapper
 from .maternal_consent_model_wrapper import MaternalConsentModelWrapper
 
 
-class MaternalEligibilityModelWrapper(ConsentModelWrapperMixin, ModelWrapper):
+class SubjectScreeningModelWrapper(ConsentModelWrapperMixin, ModelWrapper):
 
     consent_model_wrapper_cls = MaternalConsentModelWrapper
-    model = 'td_maternal.maternaleligibility'
-    next_url_attrs = ['eligibility_id']
+    model = 'td_maternal.subjectscreening'
+    next_url_attrs = ['screening_identifier']
     next_url_name = settings.DASHBOARD_URL_NAMES.get(
-        'maternal_eligibility_listboard_url')
+        'subject_screening_listboard_url')
 
     @property
     def consented(self):
-        return self.object.registered_subject.subject_identifier
+        return 'iii'
 
     @property
     def consent_model_obj(self):

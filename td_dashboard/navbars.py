@@ -9,11 +9,11 @@ td_dashboard = Navbar(name='td_dashboard')
 td_dashboard.append_item(
     NavbarItem(
         name='eligible_subject',
-        title='Maternal Eligibility',
+        title='Subject Screening',
         label='maternal_eligibility',
         fa_icon='fa fa-user-plus',
         url_name=settings.DASHBOARD_URL_NAMES[
-            'maternal_eligibility_listboard_url'],
+            'subject_screening_listboard_url'],
         no_url_namespace=no_url_namespace))
 
 td_dashboard.append_item(

@@ -1,3 +1,3 @@
-from td_dashboard.views.maternal_eligibility import ListBoardView as MaternalEligibilityListboardView
-from td_dashboard.views.maternal_subject import DashboardView as MaternalSubjectDashboardView
-from td_dashboard.views.maternal_subject import ListboardView as MaternalSubjectListboardView
+from .maternal_subject import  ListboardView as MaternalSubjectListboardView
+from .maternal_subject import DashboardView as MaternalSubjectDashboardView
+from .subject_screening import ListBoardView as SubjectScreeningListboardView
