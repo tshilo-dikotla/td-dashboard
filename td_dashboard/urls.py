@@ -3,7 +3,7 @@ from django.urls.conf import path, include
 from edc_dashboard import UrlConfig
 
 from .patterns import subject_identifier, screening_identifier
-from .views import MaternalEligibilityListboardView
+from .views import SubjectScreeningListboardView
 from .views import MaternalSubjectListboardView, MaternalSubjectDashboardView
 
 
@@ -17,7 +17,7 @@ subject_listboard_url_config = UrlConfig(
     identifier_pattern=subject_identifier)
 screening_listboard_url_config = UrlConfig(
     url_name='subject|_screening_listboard_url',
-    view_class=MaternalEligibilityListboardView,
+    view_class=SubjectScreeningListboardView,
     label='subject|_screening_listboard',
     identifier_label='screening_identifier',
     identifier_pattern=screening_identifier)
