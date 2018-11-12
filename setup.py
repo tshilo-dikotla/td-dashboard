@@ -14,8 +14,8 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 setup(
     name='td-dashboard',
     version='0.1.0',
-    author=u'Itumeleng Mosweu',
-    author_email='imosweu@bhp.org.bw',
+    author=u'Coulson Kgathi',
+    author_email='ckgathi@gmail.com',
     packages=find_packages(),
     include_package_data=True,
     url='https://github.com/tshilo-dikotla/td-dashboard',
