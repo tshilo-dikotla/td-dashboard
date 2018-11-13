@@ -5,4 +5,4 @@ from .maternal_visit_model_wrapper import MaternalVisitModelWrapper
 
 class AppointmentModelWrapper(BaseAppointmentModelWrapper):
 
-    maternal_model_wrapper_cls = MaternalVisitModelWrapper
+    visit_model_wrapper_cls = MaternalVisitModelWrapper

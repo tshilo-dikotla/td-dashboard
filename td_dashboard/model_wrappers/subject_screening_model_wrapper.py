@@ -17,7 +17,17 @@ class SubjectScreeningModelWrapper(ConsentModelWrapperMixin, ModelWrapper):
 
     @property
     def consented(self):
-        return 'iii'
+        return self.object.subject_identifier
+
+    @property
+    def create_consent_options(self):
+        options = super().create_consent_options
+        options.update(screening_identifier=self.object.screening_identifier)
+        return options
+
+    @property
+    def consent_options(self):
+        return dict(screening_identifier=self.object.screening_identifier)
 
     @property
     def consent_model_obj(self):
