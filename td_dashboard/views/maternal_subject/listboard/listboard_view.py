@@ -6,7 +6,7 @@ from edc_dashboard.view_mixins import ListboardFilterViewMixin, SearchFormViewMi
 from edc_dashboard.views import ListboardView
 from edc_navbar import NavbarViewMixin
 
-from ....model_wrappers import MaternalConsentModelWrapper
+from ....model_wrappers import SubjectConsentModelWrapper
 
 
 class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
@@ -14,15 +14,15 @@ class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
                     ListboardView):
 
     listboard_template = 'maternal_subject_listboard_template'
-    listboard_url = 'maternal_subject_listboard_url'
+    listboard_url = 'subject_listboard_url'
     listboard_panel_style = 'success'
     listboard_fa_icon = "far fa-user-circle"
 
     model = 'td_maternal.subjectconsent'
-    model_wrapper_cls = MaternalConsentModelWrapper
+    model_wrapper_cls = SubjectConsentModelWrapper
     navbar_name = 'td_dashboard'
     navbar_selected_item = 'consented_subject'
-    search_form_url = 'maternal_subject_listboard_url'
+    search_form_url = 'subject_listboard_url'
 
     def get_queryset_filter_options(self, request, *args, **kwargs):
         options = super().get_queryset_filter_options(request, *args, **kwargs)

@@ -6,4 +6,4 @@ class MaternalVisitModelWrapper(BaseSubjectVisitModelWrapper):
 
     model = 'td_maternal.maternalvisit'
     next_url_name = settings.DASHBOARD_URL_NAMES.get(
-        'maternal_subject_dashboard_url')
+        'subject_dashboard_url')

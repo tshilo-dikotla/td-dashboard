@@ -10,21 +10,21 @@ from .views import MaternalSubjectListboardView, MaternalSubjectDashboardView
 app_name = 'td_dashboard'
 
 subject_listboard_url_config = UrlConfig(
-    url_name='maternal_subject_listboard_url',
+    url_name='subject_listboard_url',
     view_class=MaternalSubjectListboardView,
     label='maternal_subject_listboard',
     identifier_label='subject_identifier',
     identifier_pattern=subject_identifier)
 screening_listboard_url_config = UrlConfig(
-    url_name='subject_screening_listboard_url',
+    url_name='screening_listboard_url',
     view_class=SubjectScreeningListboardView,
-    label='subject_screening_listboard',
+    label='screening_listboard',
     identifier_label='screening_identifier',
     identifier_pattern=screening_identifier)
 subject_dashboard_url_config = UrlConfig(
-    url_name='maternal_subject_dashboard_url',
+    url_name='subject_dashboard_url',
     view_class=MaternalSubjectDashboardView,
-    label='maternal_subject_dashboard',
+    label='subject_dashboard',
     identifier_label='subject_identifier',
     identifier_pattern=subject_identifier)
 

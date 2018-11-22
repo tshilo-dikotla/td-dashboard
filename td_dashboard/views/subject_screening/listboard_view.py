@@ -16,8 +16,8 @@ from .filters import ListboardViewFilters
 class ListBoardView(NavbarViewMixin, EdcBaseViewMixin,
                     ListboardFilterViewMixin, SearchFormViewMixin, ListboardView):
 
-    listboard_template = 'subject_screening_listboard_template'
-    listboard_url = 'subject_screening_listboard_url'
+    listboard_template = 'screening_listboard_template'
+    listboard_url = 'screening_listboard_url'
     listboard_panel_style = 'info'
     listboard_fa_icon = "fa-user-plus"
 
@@ -28,7 +28,7 @@ class ListBoardView(NavbarViewMixin, EdcBaseViewMixin,
     navbar_selected_item = 'eligible_subject'
     ordering = '-modified'
     paginate_by = 10
-    search_form_url = 'subject_screening_listboard_url'
+    search_form_url = 'screening_listboard_url'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
