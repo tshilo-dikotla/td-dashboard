@@ -19,6 +19,7 @@
     <!-- begin results header -->
     <th>#</th>
     <th></th>
+    <th>Antenatal Enrollment</th>
     <th>Screening Identifier</th>
     <th>Subject Identifier</th>
     <th>Age</th>
@@ -45,13 +46,23 @@
     {% endif %}
     </div>
     </td>
+   
+   	<td style="white-space: nowrap">
+    <div class="btn-group">
+    {% if result.is_consented %}
+        {% if result.antenatal_enrollment %}
+            {% dashboard_button result %}
+        {% else %}
+            {% antenatal_enrollment_button result %}
+        {% endif %}
+    {% endif %}
+    </div>
 {% endblock listboard_table_button_column %}
 
 
 {% block listboard_table_columns %}
-
     <td>{{ result.screening_identifier }} </td>
-    <td nowrap>{% if "092" in result.consent.subject_identifier %}{{ result.consent.subject_identifier }}{% endif %}</td>
+    <td nowrap>{% if "085" in result.subject_identifier %}{{ result.subject_identifier }}{% endif %}</td>
     <td nowrap>{{ result.age_in_years }} yrs</td>
     <td nowrap>{{ result.user_created }}</td>
     <td nowrap>{{ result.object.modified|date:"SHORT_DATETIME_FORMAT" }}</td>  

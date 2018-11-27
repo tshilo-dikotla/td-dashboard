@@ -4,14 +4,15 @@ from django.core.exceptions import ObjectDoesNotExist
 from edc_consent import ConsentModelWrapperMixin
 from edc_model_wrapper import ModelWrapper
 
+from .antenatal_enrollment_wrapper_mixin import AntenatalEnrollmentModelWrapperMixin
 from .subject_consent_model_wrapper import SubjectConsentModelWrapper
 
 
-class SubjectScreeningModelWrapper(ConsentModelWrapperMixin, ModelWrapper):
+class SubjectScreeningModelWrapper(AntenatalEnrollmentModelWrapperMixin, ConsentModelWrapperMixin, ModelWrapper):
 
     consent_model_wrapper_cls = SubjectConsentModelWrapper
     model = 'td_maternal.subjectscreening'
-    next_url_attrs = ['screening_identifier']
+    next_url_attrs = ['screening_identifier', 'subject_identifier']
     next_url_name = settings.DASHBOARD_URL_NAMES.get(
         'screening_listboard_url')
 

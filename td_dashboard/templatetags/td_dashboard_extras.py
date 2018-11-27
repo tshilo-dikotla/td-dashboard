@@ -1,6 +1,5 @@
 from django import template
 from django.conf import settings
-from edc_constants.constants import ABNORMAL
 
 register = template.Library()
 
@@ -34,6 +33,15 @@ def consent_button(model_wrapper):
         screening_identifier=model_wrapper.object.screening_identifier,
         add_consent_href=model_wrapper.consent.href,
         consent_version=consent_version,
+        title=' '.join(title))
+
+
+@register.inclusion_tag('td_dashboard/buttons/antenatal_enrollment_button.html')
+def antenatal_enrollment_button(model_wrapper):
+    title = ['subject antenatal enrollment.']
+    return dict(
+        subject_identifier=model_wrapper.object.subject_identifier,
+        add_anternatal_enrollment_href=model_wrapper.antenatal_enrollment.href,
         title=' '.join(title))
 
 
