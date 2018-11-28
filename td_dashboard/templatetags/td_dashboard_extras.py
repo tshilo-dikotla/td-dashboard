@@ -46,6 +46,16 @@ def antenatal_enrollment_button(model_wrapper):
         title=' '.join(title),)
 
 
+@register.inclusion_tag('td_dashboard/buttons/maternal_labour_del_button.html')
+def maternal_labour_del_button(model_wrapper):
+    title = ['subject maternal labour del.']
+    return dict(
+        subject_identifier=model_wrapper.object.subject_identifier,
+        add_maternal_labour_del_href=model_wrapper.maternal_labour_del.href,
+        maternal_labour_del_model_obj=model_wrapper.maternal_labour_del_model_obj,
+        title=' '.join(title),)
+
+
 @register.inclusion_tag('td_dashboard/buttons/dashboard_button.html')
 def dashboard_button(model_wrapper):
     subject_dashboard_url = settings.DASHBOARD_URL_NAMES.get(

@@ -10,7 +10,7 @@ class AntenatalEnrollmentModelWrapperMixin:
 
     @property
     def antenatal_enrollment_model_obj(self):
-        """Returns a consent model instance or None.
+        """Returns a antenatal enrollment model instance or None.
         """
         try:
             return self.antenatal_enrollment_cls.objects.get(**self.antenatal_enrollment_options)

@@ -5,10 +5,13 @@ from edc_consent import ConsentModelWrapperMixin
 from edc_model_wrapper import ModelWrapper
 
 from .antenatal_enrollment_wrapper_mixin import AntenatalEnrollmentModelWrapperMixin
+from .maternal_labour_del_wrapper_mixin import MaternalLabourDelModelWrapperMixin
 from .subject_consent_model_wrapper import SubjectConsentModelWrapper
 
 
-class SubjectScreeningModelWrapper(AntenatalEnrollmentModelWrapperMixin, ConsentModelWrapperMixin, ModelWrapper):
+class SubjectScreeningModelWrapper(
+        MaternalLabourDelModelWrapperMixin, AntenatalEnrollmentModelWrapperMixin,
+        ConsentModelWrapperMixin, ModelWrapper):
 
     consent_model_wrapper_cls = SubjectConsentModelWrapper
     model = 'td_maternal.subjectscreening'
