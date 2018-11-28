@@ -21,6 +21,10 @@ class SubjectScreeningModelWrapper(AntenatalEnrollmentModelWrapperMixin, Consent
         return self.object.subject_identifier
 
     @property
+    def subject_identifier(self):
+        return self.object.subject_identifier
+
+    @property
     def create_consent_options(self):
         options = super().create_consent_options
         options.update(screening_identifier=self.object.screening_identifier)

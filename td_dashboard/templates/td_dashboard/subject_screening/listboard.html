@@ -51,7 +51,7 @@
     <div class="btn-group">
     {% if result.is_consented %}
         {% if result.antenatal_enrollment %}
-            {% dashboard_button result %}
+            {% antenatal_enrollment_button result %}
         {% else %}
             {% antenatal_enrollment_button result %}
         {% endif %}

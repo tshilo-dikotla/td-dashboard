@@ -42,7 +42,8 @@ def antenatal_enrollment_button(model_wrapper):
     return dict(
         subject_identifier=model_wrapper.object.subject_identifier,
         add_anternatal_enrollment_href=model_wrapper.antenatal_enrollment.href,
-        title=' '.join(title))
+        antenatal_enrollment_model_obj=model_wrapper.antenatal_enrollment_model_obj,
+        title=' '.join(title),)
 
 
 @register.inclusion_tag('td_dashboard/buttons/dashboard_button.html')
