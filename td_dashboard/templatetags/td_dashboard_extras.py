@@ -46,6 +46,16 @@ def antenatal_enrollment_button(model_wrapper):
         title=' '.join(title),)
 
 
+@register.inclusion_tag('td_dashboard/buttons/antenatal_visit_membership_button.html')
+def antenatal_visit_membership_button(model_wrapper):
+    title = ['subject antenatal visit membership.']
+    return dict(
+        subject_identifier=model_wrapper.object.subject_identifier,
+        add_antenatal_visit_membership_href=model_wrapper.antenatal_visit_membership.href,
+        antenatal_visit_membership_model_obj=model_wrapper.antenatal_visit_membership_model_obj,
+        title=' '.join(title),)
+
+
 @register.inclusion_tag('td_dashboard/buttons/dashboard_button.html')
 def dashboard_button(model_wrapper):
     subject_dashboard_url = settings.DASHBOARD_URL_NAMES.get(

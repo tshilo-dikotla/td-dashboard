@@ -1,14 +1,18 @@
 from django.apps import apps as django_apps
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
+
 from edc_consent import ConsentModelWrapperMixin
 from edc_model_wrapper import ModelWrapper
 
+from .antenantal_visit_membership_wrapper_mixin import AntenatalVisitMembershipWrapperMixin
 from .antenatal_enrollment_wrapper_mixin import AntenatalEnrollmentModelWrapperMixin
 from .subject_consent_model_wrapper import SubjectConsentModelWrapper
 
 
-class SubjectScreeningModelWrapper(AntenatalEnrollmentModelWrapperMixin, ConsentModelWrapperMixin, ModelWrapper):
+class SubjectScreeningModelWrapper(AntenatalEnrollmentModelWrapperMixin,
+                                   AntenatalVisitMembershipWrapperMixin,
+                                   ConsentModelWrapperMixin, ModelWrapper):
 
     consent_model_wrapper_cls = SubjectConsentModelWrapper
     model = 'td_maternal.subjectscreening'
