@@ -43,6 +43,8 @@ else:
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
+AUTO_CREATE_KEYS = True
+
 CONFIG_PATH = os.path.join(ETC_DIR, APP_NAME, CONFIG_FILE)
 sys.stdout.write(style.SUCCESS('Reading config from {}\n'.format(CONFIG_PATH)))
 
@@ -59,8 +61,11 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_crypto_fields.apps.AppConfig',
+    'edc_protocol.apps.AppConfig',
     'td_dashboard.apps.AppConfig'
 ]
 
