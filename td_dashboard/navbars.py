@@ -10,7 +10,7 @@ td_dashboard.append_item(
     NavbarItem(
         name='eligible_subject',
         title='Subject Screening',
-        label='maternal_eligibility',
+        label='Subject Screening',
         fa_icon='fa fa-user-plus',
         url_name=settings.DASHBOARD_URL_NAMES[
             'screening_listboard_url'],
