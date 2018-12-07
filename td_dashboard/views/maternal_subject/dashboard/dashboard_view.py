@@ -20,6 +20,7 @@ class DashboardView(
     consent_model = 'td_maternal.subjectconsent'
     consent_model_wrapper_cls = SubjectConsentModelWrapper
     navbar_name = 'td_dashboard'
+    visit_attr = 'maternalvisit'
     navbar_selected_item = 'consented_subject'
     subject_locator_model = 'edc_locator.subjectlocator'
     subject_locator_model_wrapper_cls = SubjectLocatorModelWrapper
