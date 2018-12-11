@@ -14,7 +14,7 @@ from .subject_consent_model_wrapper import SubjectConsentModelWrapper
 class SubjectScreeningModelWrapper(
         MaternalLabourDelModelWrapperMixin,
         AntenatalVisitMembershipWrapperMixin,
-    AntenatalEnrollmentModelWrapperMixin,
+        AntenatalEnrollmentModelWrapperMixin,
         ConsentModelWrapperMixin, ModelWrapper):
 
     consent_model_wrapper_cls = SubjectConsentModelWrapper
