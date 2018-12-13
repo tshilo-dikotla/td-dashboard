@@ -13,7 +13,7 @@ class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
                     ListboardFilterViewMixin, SearchFormViewMixin,
                     ListboardView):
 
-    listboard_template = 'maternal_subject_listboard_template'
+    listboard_template = 'subject_listboard_template'
     listboard_url = 'subject_listboard_url'
     listboard_panel_style = 'success'
     listboard_fa_icon = "far fa-user-circle"
