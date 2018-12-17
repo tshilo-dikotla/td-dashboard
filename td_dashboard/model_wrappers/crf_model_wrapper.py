@@ -1,4 +1,5 @@
-from edc_visit_schedule.model_wrappers import CrfModelWrapper as BaseCrfModelWrapper
+from edc_visit_schedule.model_wrappers import (
+    CrfModelWrapper as BaseCrfModelWrapper)
 
 
 class CrfModelWrapper(BaseCrfModelWrapper):

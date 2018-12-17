@@ -7,3 +7,8 @@ class MaternalVisitModelWrapper(BaseSubjectVisitModelWrapper):
     model = 'td_maternal.maternalvisit'
     next_url_name = settings.DASHBOARD_URL_NAMES.get(
         'subject_dashboard_url')
+    next_url_attrs = ['subject_identifier', 'appointment', 'reason']
+
+    @property
+    def appointment(self):
+        return str(self.object.appointment.id)
