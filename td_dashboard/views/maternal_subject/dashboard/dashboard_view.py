@@ -3,10 +3,10 @@ from edc_dashboard.views import DashboardView as BaseDashboardView
 from edc_navbar import NavbarViewMixin
 from edc_subject_dashboard.view_mixins import SubjectDashboardViewMixin
 
-from ....model_wrappers import AppointmentModelWrapper
-from ....model_wrappers import SubjectConsentModelWrapper
-from ....model_wrappers import MaternalVisitModelWrapper
-from ....model_wrappers import SubjectLocatorModelWrapper
+from ....model_wrappers import (
+    AppointmentModelWrapper, SubjectConsentModelWrapper,
+    MaternalVisitModelWrapper, SubjectLocatorModelWrapper,
+    CrfModelWrapper, RequisitionModelWrapper)
 
 
 class DashboardView(
@@ -17,6 +17,8 @@ class DashboardView(
     dashboard_template = 'subject_dashboard_template'
     appointment_model = 'edc_appointment.appointment'
     appointment_model_wrapper_cls = AppointmentModelWrapper
+    crf_model_wrapper_cls = CrfModelWrapper
+    requisition_model_wrapper_cls = RequisitionModelWrapper
     consent_model = 'td_maternal.subjectconsent'
     consent_model_wrapper_cls = SubjectConsentModelWrapper
     navbar_name = 'td_dashboard'
