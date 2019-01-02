@@ -50,35 +50,23 @@
    	<td style="white-space: nowrap">
     <div class="btn-group">
     {% if result.is_consented %}
-        {% if result.antenatal_enrollment %}
-            {% antenatal_enrollment_button result %}
-        {% else %}
-            {% antenatal_enrollment_button result %}
-        {% endif %}
+		{% antenatal_enrollment_button result %}
     {% endif %}
     </div>
     </td>
     
     <td style="white-space: nowrap">
     <div class="btn-group">
-    {% if result.is_consented %}
-        {% if result.antenatal_visit_membership %}
-            {% antenatal_visit_membership_button result %}
-        {% else %}
-            {% antenatal_visit_membership_button result %}     
-        {% endif %}
+    {% if result.antenatal_enrollment %}
+		{% antenatal_visit_membership_button result %}
     {% endif %}
     </div>
     </td>
     
     <td style="white-space: nowrap">
     <div class="btn-group">
-    {% if result.is_consented %}
-        {% if result.maternal_labour_del %}
-            {% maternal_labour_del_button result %}
-        {% else %}
-            {% maternal_labour_del_button result %}
-        {% endif %}
+    {% if result.antenatal_visit_membership %}
+        {% maternal_labour_del_button result %}
     {% endif %}
     </div>
     </td>

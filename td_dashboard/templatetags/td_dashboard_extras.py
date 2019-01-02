@@ -73,3 +73,22 @@ def dashboard_button(model_wrapper):
     return dict(
         subject_dashboard_url=subject_dashboard_url,
         subject_identifier=model_wrapper.subject_identifier)
+
+
+@register.inclusion_tag('td_dashboard/buttons/infant_birth_button.html')
+def infant_birth_button(infant_birth_values):
+    title = ['infant birth.']
+    return dict(
+        subject_identifier=infant_birth_values.subject_identifier,
+        add_infant_birth_href=infant_birth_values.infant_birth.href,
+        infant_birth_model_obj=infant_birth_values.infant_birth_obj,
+        title=' '.join(title),)
+
+
+@register.inclusion_tag('td_dashboard/buttons/infant_dashboard_button.html')
+def infant_dashboard_button(model_wrapper):
+    subject_dashboard_url = settings.DASHBOARD_URL_NAMES.get(
+        'infant_subject_dashboard_url')
+    return dict(
+        subject_dashboard_url=subject_dashboard_url,
+        subject_identifier=model_wrapper.subject_identifier)

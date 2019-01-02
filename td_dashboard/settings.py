@@ -157,6 +157,8 @@ DASHBOARD_URL_NAMES = {
     'subject_listboard_url': 'td_dashboard:subject_listboard_url',
     'maternal_eligibility_listboard_url': 'td_dashboard:maternal_eligibility_listboard_url',
     'subject_dashboard_url': 'td_dashboard:subject_dashboard_url',
+    'infant_listboard_url': 'td_dashboard:infant_listboard_url',
+    'infant_subject_dashboard_url': 'td_dashboard:infant_subject_dashboard_url',
 }
 
 DASHBOARD_BASE_TEMPLATES = {
@@ -165,6 +167,8 @@ DASHBOARD_BASE_TEMPLATES = {
     'maternal_eligibility_listboard_template': 'td_dashboard/subject_screening/listboard.html',
     'subject_listboard_template': 'td_dashboard/maternal_subject/listboard.html',
     'subject_dashboard_template': 'td_dashboard/maternal_subject/dashboard.html',
+    'infant_listboard_template': 'td_dashboard/infant_subject/listboard.html',
+    'infant_subject_dashboard_template': 'td_dashboard/infant_subject/dashboard.html',
 }
 
 

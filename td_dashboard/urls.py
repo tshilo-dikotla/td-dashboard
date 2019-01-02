@@ -3,8 +3,9 @@ from django.urls.conf import path, include
 from edc_dashboard import UrlConfig
 
 from .patterns import subject_identifier, screening_identifier
-from .views import SubjectScreeningListboardView
-from .views import MaternalSubjectListboardView, MaternalSubjectDashboardView
+from .views import (MaternalSubjectListboardView, MaternalSubjectDashboardView,
+                    SubjectScreeningListboardView, InfantDashboardView,
+                    InfantListBoardView)
 
 
 app_name = 'td_dashboard'
@@ -28,11 +29,27 @@ subject_dashboard_url_config = UrlConfig(
     identifier_label='subject_identifier',
     identifier_pattern=subject_identifier)
 
+infant_listboard_url_config = UrlConfig(
+    url_name='infant_listboard_url',
+    view_class=InfantListBoardView,
+    label='infant_listboard',
+    identifier_label='subject_identifier',
+    identifier_pattern=subject_identifier)
+
+infant_subject_dashboard_url_config = UrlConfig(
+    url_name='infant_subject_dashboard_url',
+    view_class=InfantDashboardView,
+    label='infant_subject_dashboard',
+    identifier_label='subject_identifier',
+    identifier_pattern=subject_identifier)
+
 
 urlpatterns = []
 urlpatterns += subject_listboard_url_config.listboard_urls
 urlpatterns += screening_listboard_url_config.listboard_urls
 urlpatterns += subject_dashboard_url_config.dashboard_urls
+urlpatterns += infant_listboard_url_config.listboard_urls
+urlpatterns += infant_subject_dashboard_url_config.dashboard_urls
 
 if settings.APP_NAME == 'td_dashboard':
 

@@ -1,3 +1,5 @@
-from .maternal_subject import  ListboardView as MaternalSubjectListboardView
+from .infant_subject import DashboardView as InfantDashboardView
+from .infant_subject import ListboardView as InfantListBoardView
+from .maternal_subject import ListboardView as MaternalSubjectListboardView
 from .maternal_subject import DashboardView as MaternalSubjectDashboardView
 from .subject_screening import ListBoardView as SubjectScreeningListboardView
