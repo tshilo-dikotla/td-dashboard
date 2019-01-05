@@ -5,11 +5,10 @@ from django.views.generic.base import ContextMixin
 from edc_base.view_mixins import EdcBaseViewMixin
 from edc_dashboard.views import DashboardView as BaseDashboardView
 from edc_navbar import NavbarViewMixin
-from edc_registration.models import RegisteredSubject
 from edc_subject_dashboard.view_mixins import SubjectDashboardViewMixin
 
 from ....model_wrappers import (
-    AppointmentModelWrapper, SubjectConsentModelWrapper,
+    InfantAppointmentModelWrapper, SubjectConsentModelWrapper,
     InfantCrfModelWrapper, InfantRequisitionModelWrapper,
     InfantVisitModelWrapper, SubjectLocatorModelWrapper,
     InfantBirthModelWrapper)
@@ -58,7 +57,7 @@ class DashboardView(
     dashboard_url = 'infant_subject_dashboard_url'
     dashboard_template = 'infant_subject_dashboard_template'
     appointment_model = 'edc_appointment.appointment'
-    appointment_model_wrapper_cls = AppointmentModelWrapper
+    appointment_model_wrapper_cls = InfantAppointmentModelWrapper
     crf_model_wrapper_cls = InfantCrfModelWrapper
     requisition_model_wrapper_cls = InfantRequisitionModelWrapper
     consent_model = 'td_maternal.subjectconsent'

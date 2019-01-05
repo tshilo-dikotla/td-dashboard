@@ -54,9 +54,10 @@ class DashboardView(
     def infant_registered_subject(self):
         """Returns an infant registered subject.
         """
+        subject_identifier = self.kwargs.get('subject_identifier')
         try:
             registered_subject = RegisteredSubject.objects.get(
-                relative_identifier=self.subject_identifier)
+                relative_identifier=subject_identifier)
         except RegisteredSubject.DoesNotExist:
             return None
         else:
