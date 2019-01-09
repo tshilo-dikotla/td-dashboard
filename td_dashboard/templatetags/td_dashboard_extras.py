@@ -87,8 +87,8 @@ def infant_birth_button(infant_birth_values):
 
 @register.inclusion_tag('td_dashboard/buttons/infant_dashboard_button.html')
 def infant_dashboard_button(model_wrapper):
-    subject_dashboard_url = settings.DASHBOARD_URL_NAMES.get(
+    infant_subject_dashboard_url = settings.DASHBOARD_URL_NAMES.get(
         'infant_subject_dashboard_url')
     return dict(
-        subject_dashboard_url=subject_dashboard_url,
+        subject_dashboard_url=infant_subject_dashboard_url,
         subject_identifier=model_wrapper.subject_identifier)

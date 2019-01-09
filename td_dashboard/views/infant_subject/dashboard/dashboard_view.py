@@ -8,7 +8,7 @@ from edc_navbar import NavbarViewMixin
 from edc_subject_dashboard.view_mixins import SubjectDashboardViewMixin
 
 from ....model_wrappers import (
-    InfantAppointmentModelWrapper, SubjectConsentModelWrapper,
+    InfantAppointmentModelWrapper, InfantDummyConsentModelWrapper,
     InfantCrfModelWrapper, InfantRequisitionModelWrapper,
     InfantVisitModelWrapper, SubjectLocatorModelWrapper,
     InfantBirthModelWrapper)
@@ -56,12 +56,12 @@ class DashboardView(
 
     dashboard_url = 'infant_subject_dashboard_url'
     dashboard_template = 'infant_subject_dashboard_template'
-    appointment_model = 'edc_appointment.appointment'
+    appointment_model = 'td_infant.appointment'
     appointment_model_wrapper_cls = InfantAppointmentModelWrapper
     crf_model_wrapper_cls = InfantCrfModelWrapper
     requisition_model_wrapper_cls = InfantRequisitionModelWrapper
-    consent_model = 'td_maternal.subjectconsent'
-    consent_model_wrapper_cls = SubjectConsentModelWrapper
+    consent_model = 'td_infant.infantdummysubjectconsent'
+    consent_model_wrapper_cls = InfantDummyConsentModelWrapper
     navbar_name = 'td_dashboard'
     visit_attr = 'infantvisit'
     navbar_selected_item = 'infant_subject'
