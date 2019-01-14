@@ -25,6 +25,15 @@ def eligibility_button(subject_screening_model_wrapper):
     return dict(eligible=obj.is_eligible, comment=comment, tooltip=tooltip)
 
 
+@register.inclusion_tag('td_dashboard/buttons/consent_version_button.html')
+def consent_version_button(model_wrapper):
+    title = ['Add Consent Version.']
+    return dict(
+        screening_identifier=model_wrapper.object.screening_identifier,
+        add_version_href=model_wrapper.consent_version.href,
+        title=' '.join(title))
+
+
 @register.inclusion_tag('td_dashboard/buttons/consent_button.html')
 def consent_button(model_wrapper):
     title = ['Consent subject to participate.']
