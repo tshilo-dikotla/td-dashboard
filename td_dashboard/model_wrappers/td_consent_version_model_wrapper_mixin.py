@@ -11,11 +11,14 @@ class TDConsentVersionModelWrapperMixin:
     @property
     def consent_version_model_obj(self):
         """Returns a TD Consent Version model instance or None.
-        """
+         """
         try:
+            print(">>>>>>>>>>>>>>>>>>>>>>>", self.consent_version_cls.objects.get(
+                **self.consent_version_options).screening_identifier)
             return self.consent_version_cls.objects.get(
                 **self.consent_version_options)
         except ObjectDoesNotExist:
+            print("NOPE!!!", self.consent_version_options)
             return None
 
     @property
@@ -36,5 +39,6 @@ class TDConsentVersionModelWrapperMixin:
         unpersisted TD consent version model instance.
         """
         options = dict(
+            screening_identifier=self.object.screening_identifier,
             version='3')
         return options

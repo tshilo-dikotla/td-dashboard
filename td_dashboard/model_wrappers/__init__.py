@@ -17,3 +17,5 @@ from .maternal_visit_model_wrapper import MaternalVisitModelWrapper
 from .subject_consent_model_wrapper import SubjectConsentModelWrapper
 from .subject_locator_model_wrapper import SubjectLocatorModelWrapper
 from .subject_screening_model_wrapper import SubjectScreeningModelWrapper
+from .td_consent_version_model_wrapper import TDConsentVersionModelWrapper
+from .td_consent_version_model_wrapper_mixin import TDConsentVersionModelWrapperMixin
