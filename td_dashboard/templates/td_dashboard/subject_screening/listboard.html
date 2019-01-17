@@ -38,11 +38,17 @@
     	{% eligibility_button result %}
     {% endif %}
     {% if result.is_eligible %}
-        {% if result.consent %}
-            {% dashboard_button result %}
-        {% else %}
-            {% consent_button result %}
-        {% endif %}
+    	{% if not result.consent_version %}
+    		{% consent_version_button result %}
+    	{%else%}
+    		{% consent_version_button result %}
+    		
+	        {% if result.consent %}
+	            {% dashboard_button result %}
+	        {% else %}
+	            {% consent_button result %}
+	        {% endif %}
+	     {% endif %}
     {% endif %}
     </div>
     </td>
