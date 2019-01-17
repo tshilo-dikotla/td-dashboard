@@ -45,7 +45,8 @@ class InfantBirthButtonCls(ContextMixin):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        infant_birth_values = InfantBirthValues(subject_identifier=self.subject_identifier)
+        infant_birth_values = InfantBirthValues(
+            subject_identifier=self.subject_identifier)
         context.update(
             infant_birth_values=infant_birth_values,)
         return context
@@ -56,7 +57,6 @@ class MaternalRegisteredSubjectCls(ContextMixin):
     @property
     def maternal_registered_subject(self):
         subject_identifier = self.kwargs.get('subject_identifier')
-        print(subject_identifier, '#$%^&*(&*^%$#$%^&*((&^%$%#$^%&*()(&*^%^$%#$^%&*()&*^&%$')
         try:
             infant_registered_subject = RegisteredSubject.objects.get(
                 subject_identifier=subject_identifier)
