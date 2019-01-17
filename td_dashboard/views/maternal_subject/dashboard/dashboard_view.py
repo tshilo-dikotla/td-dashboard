@@ -33,6 +33,8 @@ class DashboardView(
     visit_model_wrapper_cls = MaternalVisitModelWrapper
     special_forms_include_value = "td_dashboard/maternal_subject/dashboard/special_forms.html"
     mother_infant_study = True
+    infant_links = True
+    maternal_links = False
     infant_dashboard_include_value = "td_dashboard/maternal_subject/dashboard/infant_dashboard_links.html"
     infant_subject_dashboard_url = 'infant_subject_dashboard_url'
 

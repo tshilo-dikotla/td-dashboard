@@ -1,17 +1,18 @@
 from django.apps import apps as django_apps
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.views.generic.base import ContextMixin
 
 from edc_base.view_mixins import EdcBaseViewMixin
 from edc_dashboard.views import DashboardView as BaseDashboardView
 from edc_navbar import NavbarViewMixin
+from edc_registration.models import RegisteredSubject
 from edc_subject_dashboard.view_mixins import SubjectDashboardViewMixin
 
 from ....model_wrappers import (
     InfantAppointmentModelWrapper, InfantDummyConsentModelWrapper,
     InfantCrfModelWrapper, InfantRequisitionModelWrapper,
     InfantVisitModelWrapper, SubjectLocatorModelWrapper,
-    InfantBirthModelWrapper)
+    InfantBirthModelWrapper, MaternalRegisteredSubjectModelWrapper)
 
 
 class InfantBirthValues(object):
@@ -50,9 +51,39 @@ class InfantBirthButtonCls(ContextMixin):
         return context
 
 
+class MaternalRegisteredSubjectCls(ContextMixin):
+
+    @property
+    def maternal_registered_subject(self):
+        subject_identifier = self.kwargs.get('subject_identifier')
+        print(subject_identifier, '#$%^&*(&*^%$#$%^&*((&^%$%#$^%&*()(&*^%^$%#$^%&*()&*^&%$')
+        try:
+            infant_registered_subject = RegisteredSubject.objects.get(
+                subject_identifier=subject_identifier)
+        except RegisteredSubject.DoesNotExist:
+            raise ValidationError(
+                "Registered subject for infant is expected to exist.")
+        else:
+            try:
+                maternal_registered_subject = RegisteredSubject.objects.get(
+                    subject_identifier=infant_registered_subject.relative_identifier)
+            except RegisteredSubject.DoesNotExist:
+                raise ValidationError(
+                    "Registered subject for the monther is expected to exist.")
+            else:
+                return MaternalRegisteredSubjectModelWrapper(maternal_registered_subject)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(
+            maternal_registered_subject=self.maternal_registered_subject)
+        return context
+
+
 class DashboardView(
         EdcBaseViewMixin, SubjectDashboardViewMixin,
-        NavbarViewMixin, BaseDashboardView, InfantBirthButtonCls):
+        NavbarViewMixin, BaseDashboardView, InfantBirthButtonCls,
+        MaternalRegisteredSubjectCls):
 
     dashboard_url = 'infant_subject_dashboard_url'
     dashboard_template = 'infant_subject_dashboard_template'
@@ -68,4 +99,8 @@ class DashboardView(
     visit_model_wrapper_cls = InfantVisitModelWrapper
     subject_locator_model = 'edc_locator.subjectlocator'
     subject_locator_model_wrapper_cls = SubjectLocatorModelWrapper
+    mother_infant_study = True
+    infant_links = False
+    maternal_links = True
     special_forms_include_value = "td_dashboard/infant_subject/dashboard/special_forms.html"
+    maternal_dashboard_include_value = "td_dashboard/maternal_subject/dashboard/maternal_dashboard_links.html"
