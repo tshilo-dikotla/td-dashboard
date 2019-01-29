@@ -25,6 +25,18 @@ def eligibility_button(subject_screening_model_wrapper):
     return dict(eligible=obj.is_eligible, comment=comment, tooltip=tooltip)
 
 
+@register.inclusion_tag('td_dashboard/buttons/eligibility_button.html')
+def antenatal_enrol_eligibility_button(model_wrapper):
+    comment = []
+    obj = model_wrapper.antenatal_enrollment
+    tooltip = None
+    if not obj.is_eligible:
+        comment = obj.unenrolled.split(',')
+    comment = list(set(comment))
+    comment.sort()
+    return dict(eligible=obj.is_eligible, comment=comment, tooltip=tooltip)
+
+
 @register.inclusion_tag('td_dashboard/buttons/consent_version_add_button.html')
 def consent_version_button(model_wrapper):
     title = ['Add Consent Version.']

@@ -43,10 +43,16 @@
     	{%else%}
     		{% consent_version_button result %}
     		
-	        {% if result.consent %}
-	            {% dashboard_button result %}
+	        {% if not result.consent %}
+	        	{% consent_button result %}
 	        {% else %}
-	            {% consent_button result %}
+	        	{% consent_button result %}
+	        	
+	        	{% if result.antenatal_enrollment.is_eligible %}
+	        		{% dashboard_button result %}
+	        	{%else%}
+	        		{% antenatal_enrol_eligibility_button result %}
+	        	{% endif %}
 	        {% endif %}
 	     {% endif %}
     {% endif %}
@@ -63,7 +69,7 @@
     
     <td style="white-space: nowrap">
     <div class="btn-group">
-    {% if result.antenatal_enrollment %}
+    {% if result.antenatal_enrollment and result.antenatal_enrollment.is_eligible %}
 		{% antenatal_visit_membership_button result %}
     {% endif %}
     </div>
