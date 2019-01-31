@@ -62,7 +62,7 @@
    
    	<td style="white-space: nowrap">
     <div class="btn-group">
-    {% if result.is_eligible and result.specimen_consent %}
+    {% if result.is_consented and result.specimen_consent %}
 		{% antenatal_enrollment_button result %}
     {% endif %}
     </div>
