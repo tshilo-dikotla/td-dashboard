@@ -41,11 +41,12 @@
     	{% if not result.consent_version %}
     		{% consent_version_button result %}
     	{%else%}
-    		{% consent_version_button result %}
     		
 	        {% if not result.consent %}
 	        	{% consent_button result %}
 	        {% else %}
+	        {% specimen_consent_button result %}
+	        
 	        {% if result.antenatal_enrollment%}
 	        	{% if result.antenatal_enrollment.is_eligible %}
 	        		{% dashboard_button result %}
@@ -61,7 +62,7 @@
    
    	<td style="white-space: nowrap">
     <div class="btn-group">
-    {% if result.is_consented %}
+    {% if result.is_eligible and result.specimen_consent %}
 		{% antenatal_enrollment_button result %}
     {% endif %}
     </div>

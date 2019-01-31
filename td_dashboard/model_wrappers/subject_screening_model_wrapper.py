@@ -8,6 +8,7 @@ from edc_model_wrapper import ModelWrapper
 from .antenantal_visit_membership_wrapper_mixin import AntenatalVisitMembershipWrapperMixin
 from .antenatal_enrollment_wrapper_mixin import AntenatalEnrollmentModelWrapperMixin
 from .maternal_labour_del_wrapper_mixin import MaternalLabourDelModelWrapperMixin
+from .specimen_consent_model_wrapper_mixin import SpecimenConsentModelWrapperMixin
 from .subject_consent_model_wrapper import SubjectConsentModelWrapper
 from .td_consent_version_model_wrapper_mixin import TDConsentVersionModelWrapperMixin
 
@@ -17,6 +18,7 @@ class SubjectScreeningModelWrapper(
         AntenatalVisitMembershipWrapperMixin,
         AntenatalEnrollmentModelWrapperMixin,
         ConsentModelWrapperMixin,
+        SpecimenConsentModelWrapperMixin,
         TDConsentVersionModelWrapperMixin, ModelWrapper):
 
     consent_model_wrapper_cls = SubjectConsentModelWrapper

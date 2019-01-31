@@ -13,12 +13,9 @@ class TDConsentVersionModelWrapperMixin:
         """Returns a TD Consent Version model instance or None.
          """
         try:
-            print(">>>>>>>>>>>>>>>>>>>>>>>", self.consent_version_cls.objects.get(
-                **self.consent_version_options).screening_identifier)
             return self.consent_version_cls.objects.get(
                 **self.consent_version_options)
         except ObjectDoesNotExist:
-            print("NOPE!!!", self.consent_version_options)
             return None
 
     @property
