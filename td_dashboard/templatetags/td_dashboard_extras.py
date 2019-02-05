@@ -63,6 +63,7 @@ def specimen_consent_button(model_wrapper):
     title = ['Add Specimen Consent.']
     return dict(
         subject_identifier=model_wrapper.object.subject_identifier,
+        screening_identifier=model_wrapper.object.screening_identifier,
         add_specimen_consent_href=model_wrapper.specimen_consent.href,
         specimen_consented=model_wrapper.specimen_consent,
         title=' '.join(title))
@@ -75,6 +76,7 @@ def antenatal_enrollment_button(model_wrapper):
         subject_identifier=model_wrapper.object.subject_identifier,
         add_anternatal_enrollment_href=model_wrapper.antenatal_enrollment.href,
         antenatal_enrollment_model_obj=model_wrapper.antenatal_enrollment_model_obj,
+        screening_identifier=model_wrapper.object.screening_identifier,
         title=' '.join(title),)
 
 
