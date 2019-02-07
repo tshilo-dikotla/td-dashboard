@@ -23,7 +23,10 @@ class TDConsentVersionModelWrapperMixin:
         """Returns a wrapped saved or unsaved consent version.
         """
         model_obj = self.consent_version_model_obj or self.consent_version_cls(
-            **self.consent_version_options)
+            **self.consent_version_options, version=3)
+        if not model_obj:
+            model_obj = self.consent_version_model_obj or self.consent_version_cls(
+                **self.consent_version_options, version=1)
         return self.consent_version_model_wrapper_cls(model_obj=model_obj)
 
     @property
@@ -37,5 +40,5 @@ class TDConsentVersionModelWrapperMixin:
         """
         options = dict(
             screening_identifier=self.object.screening_identifier,
-            version='3')
+        )
         return options
