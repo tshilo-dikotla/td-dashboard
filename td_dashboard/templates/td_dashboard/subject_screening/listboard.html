@@ -38,7 +38,7 @@
     	{% eligibility_button result %}
     {% endif %}
     {% if result.is_eligible %}
-    	{% if not result.consent_versioned %}
+    	{% if not result.consent_version %}
     		{% consent_version_button result %}
     	{%else%}
     		
