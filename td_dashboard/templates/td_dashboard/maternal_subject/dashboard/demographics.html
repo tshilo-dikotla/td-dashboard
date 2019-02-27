@@ -1,0 +1,31 @@
+{% load edc_base_extras %}
+
+<div class="list-group" data-toggle="collapse">
+<a class="list-group-item"><i class="fa fa-birthday-cake fa-fw"></i>
+{{ dob|date:"SHORT_DATE_FORMAT" }}
+{% age_in_years dob %} yrs 
+ {% if hiv_status == 'POS' %}
+ 	<i class="fa  fa-plus-circle  fa-fw"></i>
+ {% else %}
+ 	{% if hiv_status == 'NEG' %}
+ 		<i class="fa  fa-minus-circle  fa-fw"></i>
+	 	{% else %}
+	 		<i class="fa  fa-question-circle  fa-fw"></i>
+	 	{% endif %}
+ {% endif %}
+</a>
+<a class="list-group-item"><i class="far fa-address-card fa-fw"></i>
+{{ identity|default:'?? identity' }} <span data-toggle="tooltip" data-placement="right" title="{{ firstname }} {{ lastname }}" class="text text-default">{{ initials }}<sup><i class="fa fa-asterisk fa-fw"></i></sup></span>
+</a>
+<a class="list-group-item">
+ 
+  <i class="fa fa-random"></i>  {{ rando_status }}  
+ 	
+</a>
+<a class="list-group-item"><i class="fa fa-hourglass-half fa-fw"></i>
+	{{ maternal_ga }} WEEKS
+</a>
+<a >
+</a>
+
+</div>

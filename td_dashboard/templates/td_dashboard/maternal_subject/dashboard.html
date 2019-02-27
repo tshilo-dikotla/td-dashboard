@@ -12,14 +12,11 @@
 
 
 {% block side_bar %}
-	{{ block.super }}
+		
+	    {% block demographics %}   
+	
+    		{% include 'td_dashboard/maternal_subject/dashboard/sidebar.html' %}
 
-    <div class="panel panel-default">
-      <div class="panel-heading">
-          <h6 class="panel-title">
-              <i class="fa fa-random fa-lg fa-fw"></i> Randomization
-          </h6>
-      </div>
-  	</div>
+		{% endblock demographics %}
  
 {% endblock side_bar %}

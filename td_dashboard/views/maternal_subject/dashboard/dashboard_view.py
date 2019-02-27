@@ -7,7 +7,9 @@ from edc_dashboard.views import DashboardView as BaseDashboardView
 from edc_navbar import NavbarViewMixin
 from edc_registration.models import RegisteredSubject
 from edc_subject_dashboard.view_mixins import SubjectDashboardViewMixin
+
 from td_maternal.action_items import MATERNAL_LOCATOR_ACTION
+from td_maternal.helper_classes import MaternalStatusHelper
 
 from ....model_wrappers import (
     AppointmentModelWrapper, SubjectConsentModelWrapper,
@@ -68,9 +70,56 @@ class DashboardView(
         else:
             return registered_subject
 
+    @property
+    def hiv_status(self):
+        """Returns mother's current hiv status.
+        """
+        maternal_visit_cls = django_apps.get_model(
+            MaternalVisitModelWrapper.model)
+        latest_visit = maternal_visit_cls.objects.all().order_by(
+            '-report_datetime').first()
+
+        if latest_visit:
+            maternal_status_helper = MaternalStatusHelper(latest_visit)
+            return maternal_status_helper.hiv_status
+        return None
+
+    @property
+    def rando_status(self):
+        """Returns mother's current hiv status.
+        """
+        maternal_rando_cls = django_apps.get_model(
+            'td_maternal.maternalrando')
+        subject_identifier = self.kwargs.get('subject_identifier')
+        try:
+            rando_status = maternal_rando_cls.objects.get(
+                maternal_visit__subject_identifier=subject_identifier)
+        except maternal_rando_cls.DoesNotExist:
+            return None
+        else:
+            return rando_status.tx
+
+    @property
+    def maternal_ga(self):
+        """Returns mother's current hiv status.
+        """
+        maternal_ultrasound_cls = django_apps.get_model(
+            'td_maternal.maternalultrasoundinitial')
+        subject_identifier = self.kwargs.get('subject_identifier')
+        try:
+            maternal_ultrasound = maternal_ultrasound_cls.objects.get(
+                maternal_visit__subject_identifier=subject_identifier)
+        except maternal_ultrasound_cls.DoesNotExist:
+            return None
+        else:
+            return maternal_ultrasound.ga_by_ultrasound_wks
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update(subject_screening=self.subject_screening)
+        context.update(subject_screening=self.subject_screening,
+                       hiv_status=self.hiv_status,
+                       rando_status=self.rando_status,
+                       maternal_ga=self.maternal_ga)
         context = self.add_url_to_context(
             new_key='dashboard_url_name',
             existing_key=self.dashboard_url,
