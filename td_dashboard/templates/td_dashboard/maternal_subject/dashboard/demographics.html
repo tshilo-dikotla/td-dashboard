@@ -1,6 +1,6 @@
 {% load edc_base_extras %}
 
-<div class="list-group" data-toggle="collapse">
+<div class="list-group" >
 <a class="list-group-item"><i class="fa fa-birthday-cake fa-fw"></i>
 {{ dob|date:"SHORT_DATE_FORMAT" }}
 {% age_in_years dob %} yrs 
@@ -17,15 +17,16 @@
 <a class="list-group-item"><i class="far fa-address-card fa-fw"></i>
 {{ identity|default:'?? identity' }} <span data-toggle="tooltip" data-placement="right" title="{{ firstname }} {{ lastname }}" class="text text-default">{{ initials }}<sup><i class="fa fa-asterisk fa-fw"></i></sup></span>
 </a>
+{% if rando_status %}
 <a class="list-group-item">
  
   <i class="fa fa-random"></i>  {{ rando_status }}  
  	
 </a>
+{% endif %}
+{% if maternal_ga %}
 <a class="list-group-item"><i class="fa fa-hourglass-half fa-fw"></i>
 	{{ maternal_ga }} WEEKS
 </a>
-<a >
-</a>
-
+{% endif %}
 </div>
