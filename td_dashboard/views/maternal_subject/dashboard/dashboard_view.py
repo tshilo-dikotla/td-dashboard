@@ -97,7 +97,7 @@ class DashboardView(
         except maternal_rando_cls.DoesNotExist:
             return None
         else:
-            return rando_status.tx
+            return rando_status.rx
 
     @property
     def maternal_ga(self):
