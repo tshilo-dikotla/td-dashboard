@@ -3,12 +3,14 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import ValidationError
 from edc_action_item.site_action_items import site_action_items
 from edc_base.view_mixins import EdcBaseViewMixin
+from edc_constants.constants import OFF_STUDY, DEAD
 from edc_dashboard.views import DashboardView as BaseDashboardView
-from edc_navbar import NavbarViewMixin
 from edc_registration.models import RegisteredSubject
 from edc_subject_dashboard.view_mixins import SubjectDashboardViewMixin
 
-from td_maternal.action_items import MATERNAL_LOCATOR_ACTION
+from edc_navbar import NavbarViewMixin
+from td_maternal.action_items import MATERNAL_DEATH_REPORT_ACTION
+from td_maternal.action_items import MATERNAL_LOCATOR_ACTION, MATERNALOFF_STUDY_ACTION
 from td_maternal.helper_classes import MaternalStatusHelper
 
 from ....model_wrappers import (
@@ -124,6 +126,7 @@ class DashboardView(
             new_key='dashboard_url_name',
             existing_key=self.dashboard_url,
             context=context)
+        self.get_maternal_offstudy_or_message()
         return context
 
     def get_subject_locator_or_message(self):
@@ -144,3 +147,44 @@ class DashboardView(
                 action_cls(
                     subject_identifier=subject_identifier)
         return obj
+
+    def get_maternal_offstudy_or_message(self):
+        obj = None
+        maternal_visit_cls = django_apps.get_model(
+            'td_maternal.maternalvisit')
+        maternal_offstudy_cls = django_apps.get_model(
+            'td_maternal.maternaloffstudy')
+        maternal_death_cls = django_apps.get_model(
+            'td_maternal.maternaldeathreport')
+        subject_identifier = self.kwargs.get('subject_identifier')
+        try:
+            obj = maternal_visit_cls.objects.get(
+                appointment__subject_identifier=subject_identifier,
+                study_status=OFF_STUDY)
+        except ObjectDoesNotExist:
+            pass
+        else:
+            if obj.survival_status == DEAD:
+                self.action_cls_item_creator(
+                    subject_identifier=subject_identifier,
+                    action_cls=maternal_death_cls,
+                    action_type=MATERNAL_DEATH_REPORT_ACTION)
+            else:
+                self.action_cls_item_creator(
+                    subject_identifier=subject_identifier,
+                    action_cls=maternal_offstudy_cls,
+                    action_type=MATERNALOFF_STUDY_ACTION)
+        return obj
+
+    def action_cls_item_creator(
+            self, subject_identifier=None, action_cls=None, action_type=None):
+        action_cls = site_action_items.get(
+            action_cls.action_name)
+        action_item_model_cls = action_cls.action_item_model_cls()
+        try:
+            action_item_model_cls.objects.get(
+                subject_identifier=subject_identifier,
+                action_type__name=action_type)
+        except ObjectDoesNotExist:
+            action_cls(
+                subject_identifier=subject_identifier)
