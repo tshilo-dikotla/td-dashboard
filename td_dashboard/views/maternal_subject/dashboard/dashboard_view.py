@@ -76,12 +76,24 @@ class DashboardView(
         """
         maternal_visit_cls = django_apps.get_model(
             MaternalVisitModelWrapper.model)
-        latest_visit = maternal_visit_cls.objects.all().order_by(
+        subject_identifier = self.kwargs.get('subject_identifier')
+        latest_visit = maternal_visit_cls.objects.filter(
+            subject_identifier=subject_identifier,).order_by(
             '-report_datetime').first()
 
         if latest_visit:
             maternal_status_helper = MaternalStatusHelper(latest_visit)
             return maternal_status_helper.hiv_status
+        else:
+            antenatal_enrollment_cls = django_apps.get_model(
+                'td_maternal.antenatalenrollment')
+            try:
+                antenatal_enrollment = antenatal_enrollment_cls.objects.get(
+                    subject_identifier=subject_identifier)
+            except antenatal_enrollment_cls.DoesNotExist:
+                return None
+            else:
+                return antenatal_enrollment.enrollment_hiv_status
         return None
 
     @property
