@@ -1,14 +1,16 @@
 from django.apps import apps as django_apps
+from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import ValidationError
+from django.utils.safestring import mark_safe
 from edc_action_item.site_action_items import site_action_items
 from edc_base.view_mixins import EdcBaseViewMixin
-from edc_constants.constants import OFF_STUDY, DEAD
+from edc_constants.constants import OFF_STUDY, DEAD, NEW, OPEN
 from edc_dashboard.views import DashboardView as BaseDashboardView
+from edc_navbar import NavbarViewMixin
 from edc_registration.models import RegisteredSubject
 from edc_subject_dashboard.view_mixins import SubjectDashboardViewMixin
 
-from edc_navbar import NavbarViewMixin
 from td_maternal.action_items import MATERNAL_DEATH_REPORT_ACTION
 from td_maternal.action_items import MATERNAL_LOCATOR_ACTION, MATERNALOFF_STUDY_ACTION
 from td_maternal.helper_classes import MaternalStatusHelper
@@ -130,6 +132,7 @@ class DashboardView(
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        self.update_messages()
         context.update(subject_screening=self.subject_screening,
                        hiv_status=self.hiv_status,
                        rando_status=self.rando_status,
@@ -200,3 +203,24 @@ class DashboardView(
         except ObjectDoesNotExist:
             action_cls(
                 subject_identifier=subject_identifier)
+
+    def update_messages(self):
+        subject_identifier = self.kwargs.get('subject_identifier')
+        maternal_offstudy_cls = django_apps.get_model(
+            'td_maternal.maternaloffstudy')
+        action_cls = site_action_items.get(
+            maternal_offstudy_cls.action_name)
+        action_item_model_cls = action_cls.action_item_model_cls()
+
+        try:
+            action_item_model_cls.objects.get(
+                subject_identifier=subject_identifier,
+                action_type__name=MATERNALOFF_STUDY_ACTION,
+                status=NEW)
+        except action_item_model_cls.DoesNotExist:
+            pass
+        else:
+            form = maternal_offstudy_cls._meta.verbose_name
+            msg = mark_safe(
+                f'Please complete {form}, cannot add any new data.')
+            messages.add_message(self.request, messages.ERROR, msg)
