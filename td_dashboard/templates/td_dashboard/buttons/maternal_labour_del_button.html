@@ -1,12 +1,13 @@
 <a id="maternallabourdel_add_{{ subject_identifier }}" 
  	title="{{ title }}"
- 	
- 	{% if maternal_labour_del_model_obj %}
-            class="btn btn-success btn-sm" data-toggle="tooltip"  data-placement="right"
-            href="{{ add_maternal_labour_del_href }}">
-        {% else %}
-            class="btn btn-warning btn-sm" data-toggle="tooltip"  data-placement="right"
-        href="{{ add_maternal_labour_del_href }}">
-        {% endif %}
-     	Maternal Lab Del
+ 	{% if maternal_ultrasound_initial_obj %}
+	 	{% if maternal_labour_del_model_obj %}
+	            class="btn btn-success btn-sm" data-toggle="tooltip"  data-placement="right"
+	            href="{{ add_maternal_labour_del_href }}">
+	        {% else %}
+	            class="btn btn-warning btn-sm" data-toggle="tooltip"  data-placement="right"
+	        href="{{ add_maternal_labour_del_href }}">
+	        {% endif %}
+	     	Maternal Lab Del
+	{% endif %}
  </a>

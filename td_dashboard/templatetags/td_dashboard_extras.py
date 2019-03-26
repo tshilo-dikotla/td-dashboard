@@ -97,6 +97,7 @@ def maternal_labour_del_button(model_wrapper):
         subject_identifier=model_wrapper.object.subject_identifier,
         add_maternal_labour_del_href=model_wrapper.maternal_labour_del.href,
         maternal_labour_del_model_obj=model_wrapper.maternal_labour_del_model_obj,
+        maternal_ultrasound_initial_obj=model_wrapper.maternal_ultrasound_initial_obj,
         title=' '.join(title),)
 
 
