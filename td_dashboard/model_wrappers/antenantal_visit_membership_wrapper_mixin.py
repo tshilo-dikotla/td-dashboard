@@ -6,7 +6,7 @@ from .antenantal_visit_membership_model_wrapper import AntenatalVisitMembershipM
 
 class AntenatalVisitMembershipWrapperMixin:
 
-    antenatal_visit_membership_model_wrapper_cls = AntenatalVisitMembershipModelWrapper
+    anv_model_wrapper_cls = AntenatalVisitMembershipModelWrapper
 
     @property
     def antenatal_visit_membership_cls(self):
@@ -17,7 +17,8 @@ class AntenatalVisitMembershipWrapperMixin:
         """Returns a Antenatal Visit Membership model instance or None.
         """
         try:
-            return self.antenatal_visit_membership_cls.objects.get(**self.antenatal_visit_membership_options)
+            return self.antenatal_visit_membership_cls.objects.get(
+                **self.antenatal_visit_membership_options)
         except ObjectDoesNotExist:
             return None
 
@@ -25,9 +26,12 @@ class AntenatalVisitMembershipWrapperMixin:
     def antenatal_visit_membership(self):
         """Returns a wrapped saved or unsaved antenatal visit membership.
         """
-        model_obj = self.antenatal_visit_membership_model_obj or self.antenatal_visit_membership_cls(
-            **self.create_antenatal_visit_membership_options)
-        return self.antenatal_visit_membership_model_wrapper_cls(model_obj=model_obj)
+        model_obj = (
+            self.antenatal_visit_membership_model_obj or
+            self.antenatal_visit_membership_cls(
+                **self.create_antenatal_visit_membership_options))
+        return self.anv_model_wrapper_cls(
+            model_obj=model_obj)
 
     @property
     def create_antenatal_visit_membership_options(self):
