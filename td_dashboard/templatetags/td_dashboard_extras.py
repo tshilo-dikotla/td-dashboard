@@ -127,3 +127,23 @@ def infant_dashboard_button(model_wrapper):
     return dict(
         subject_dashboard_url=infant_subject_dashboard_url,
         subject_identifier=model_wrapper.subject_identifier)
+
+
+@register.inclusion_tag('td_dashboard/buttons/maternal_locator_button.html')
+def maternal_locator_button(model_wrapper):
+    title = ['Edit Locator.']
+    return dict(
+        subject_identifier=model_wrapper.object.subject_identifier,
+        add_maternal_locator_href=model_wrapper.maternal_locator.href,
+        maternal_locator_model_obj=model_wrapper.maternal_locator_model_obj,
+        title=' '.join(title))
+
+
+@register.inclusion_tag('td_dashboard/buttons/maternal_offstudy_button.html')
+def maternal_offstudy_button(model_wrapper):
+    title = ['Edit Offstudy.']
+    return dict(
+        subject_identifier=model_wrapper.object.subject_identifier,
+        add_maternal_offstudy_href=model_wrapper.maternal_offstudy.href,
+        maternal_offstudy_model_obj=model_wrapper.maternal_offstudy_model_obj,
+        title=' '.join(title))
