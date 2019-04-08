@@ -46,3 +46,13 @@ class MaternalLabourDelModelWrapperMixin:
         options = dict(
             subject_identifier=self.object.subject_identifier)
         return options
+
+    @property
+    def maternal_ultrasound_initial_obj(self):
+        ultrasound_initial_cls = django_apps.get_model(
+            'td_maternal.maternalultrasoundinitial')
+        try:
+            return ultrasound_initial_cls.objects.get(
+                maternal_visit__subject_identifier=self.object.subject_identifier)
+        except ObjectDoesNotExist:
+            return None

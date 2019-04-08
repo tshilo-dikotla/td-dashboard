@@ -1,13 +1,14 @@
 from django.apps import apps as django_apps
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
-
 from edc_consent import ConsentModelWrapperMixin
 from edc_model_wrapper import ModelWrapper
 
 from .antenantal_visit_membership_wrapper_mixin import AntenatalVisitMembershipWrapperMixin
 from .antenatal_enrollment_wrapper_mixin import AntenatalEnrollmentModelWrapperMixin
 from .maternal_labour_del_wrapper_mixin import MaternalLabourDelModelWrapperMixin
+from .maternal_locator_wrapper_mixin import MaternalLocatorModelWrapperMixin
+from .maternal_offstudy_wrapper_mixin import MaternalOffstudyModelWrapperMixin
 from .specimen_consent_model_wrapper_mixin import SpecimenConsentModelWrapperMixin
 from .subject_consent_model_wrapper import SubjectConsentModelWrapper
 from .td_consent_version_model_wrapper_mixin import TDConsentVersionModelWrapperMixin
@@ -18,6 +19,8 @@ class SubjectScreeningModelWrapper(
         AntenatalVisitMembershipWrapperMixin,
         AntenatalEnrollmentModelWrapperMixin,
         ConsentModelWrapperMixin,
+        MaternalLocatorModelWrapperMixin,
+        MaternalOffstudyModelWrapperMixin,
         SpecimenConsentModelWrapperMixin,
         TDConsentVersionModelWrapperMixin, ModelWrapper):
 
