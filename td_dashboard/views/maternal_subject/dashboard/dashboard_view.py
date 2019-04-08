@@ -128,7 +128,7 @@ class DashboardView(
         except maternal_ultrasound_cls.DoesNotExist:
             return None
         else:
-            return maternal_ultrasound.ga_by_ultrasound_wks
+            return maternal_ultrasound.ga_by_lmp
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
