@@ -168,9 +168,9 @@ class DashboardView(
         maternal_visit_cls = django_apps.get_model(
             'td_maternal.maternalvisit')
         maternal_offstudy_cls = django_apps.get_model(
-            'td_maternal.maternaloffstudy')
+            'td_prn.maternaloffstudy')
         maternal_death_cls = django_apps.get_model(
-            'td_maternal.maternaldeathreport')
+            'td_prn.maternaldeathreport')
         subject_identifier = self.kwargs.get('subject_identifier')
         try:
             obj = maternal_visit_cls.objects.get(
@@ -207,7 +207,7 @@ class DashboardView(
     def update_messages(self):
         subject_identifier = self.kwargs.get('subject_identifier')
         maternal_offstudy_cls = django_apps.get_model(
-            'td_maternal.maternaloffstudy')
+            'td_prn.maternaloffstudy')
         action_cls = site_action_items.get(
             maternal_offstudy_cls.action_name)
         action_item_model_cls = action_cls.action_item_model_cls()
