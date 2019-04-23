@@ -130,7 +130,7 @@ class DashboardView(
             return None
         else:
             if maternal_ultrasound.edd_confirmed > get_utcnow().date():
-                return int(40 - maternal_ultrasound.edd_confirmed - get_utcnow().date()).days / 7
+                return int(40 - ((maternal_ultrasound.edd_confirmed - get_utcnow().date()).days / 7))
             return None
 
     def get_context_data(self, **kwargs):
