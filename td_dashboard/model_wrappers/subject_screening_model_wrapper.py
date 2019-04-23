@@ -1,6 +1,7 @@
 from django.apps import apps as django_apps
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ValidationError
 from edc_consent import ConsentModelWrapperMixin
 from edc_model_wrapper import ModelWrapper
 
@@ -56,3 +57,14 @@ class SubjectScreeningModelWrapper(
             return consent_model_cls.objects.get(**self.consent_options)
         except ObjectDoesNotExist:
             return None
+
+    @property
+    def version(self):
+        consent_version_cls = django_apps.get_model(
+            'td_maternal.tdconsentversion')
+        try:
+            consent_version_obj = consent_version_cls.objects.get(
+                screening_identifier=self.object.screening_identifier)
+        except consent_version_cls.DoesNotExist:
+            return None
+        return consent_version_obj.version
