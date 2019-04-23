@@ -4,6 +4,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import ValidationError
 from django.utils.safestring import mark_safe
 from edc_action_item.site_action_items import site_action_items
+from edc_base.utils import get_utcnow
 from edc_base.view_mixins import EdcBaseViewMixin
 from edc_constants.constants import OFF_STUDY, DEAD, NEW
 from edc_dashboard.views import DashboardView as BaseDashboardView
@@ -128,7 +129,9 @@ class DashboardView(
         except maternal_ultrasound_cls.DoesNotExist:
             return None
         else:
-            return maternal_ultrasound.ga_confirmed
+            if maternal_ultrasound.edd_confirmed > get_utcnow().date():
+                return int(40 - maternal_ultrasound.edd_confirmed - get_utcnow().date()).days / 7
+            return None
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
