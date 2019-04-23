@@ -120,6 +120,7 @@ class DashboardView(
     def maternal_ga(self):
         """Returns mother's current hiv status.
         """
+        print("??????????????", self.is_maternal_labour_del())
         if not self.is_maternal_labour_del():
             maternal_ultrasound_cls = django_apps.get_model(
                 'td_maternal.maternalultrasoundinitial')
@@ -139,7 +140,7 @@ class DashboardView(
         subject_identifier = self.kwargs.get('subject_identifier')
         try:
             maternal_labour_del_cls.objects.get(
-                maternal_visit__subject_identifier=subject_identifier)
+                subject_identifier=subject_identifier)
         except maternal_labour_del_cls.DoesNotExist:
             return False
         else:
