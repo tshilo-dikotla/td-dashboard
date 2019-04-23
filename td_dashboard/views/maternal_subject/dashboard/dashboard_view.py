@@ -130,7 +130,7 @@ class DashboardView(
             except maternal_ultrasound_cls.DoesNotExist:
                 return None
             else:
-                int(abs(
+                return int(abs(
                     40 - ((maternal_ultrasound.edd_confirmed - get_utcnow().date()).days / 7)))
 
     def is_maternal_labour_del(self):
