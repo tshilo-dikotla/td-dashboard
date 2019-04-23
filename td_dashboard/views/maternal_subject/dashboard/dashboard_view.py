@@ -120,7 +120,6 @@ class DashboardView(
     def maternal_ga(self):
         """Returns mother's current hiv status.
         """
-        print("??????????????", self.is_maternal_labour_del())
         if not self.is_maternal_labour_del():
             maternal_ultrasound_cls = django_apps.get_model(
                 'td_maternal.maternalultrasoundinitial')
