@@ -103,7 +103,7 @@ class DashboardView(
 
     @property
     def rando_status(self):
-        """Returns mother's current hiv status.
+        """Returns mother's current randomization status.
         """
         maternal_rando_cls = django_apps.get_model(
             'td_maternal.maternalrando')
@@ -120,30 +120,35 @@ class DashboardView(
     def maternal_ga(self):
         """Returns mother's current hiv status.
         """
-        if not self.is_maternal_labour_del():
-            maternal_ultrasound_cls = django_apps.get_model(
-                'td_maternal.maternalultrasoundinitial')
-            subject_identifier = self.kwargs.get('subject_identifier')
-            try:
-                maternal_ultrasound = maternal_ultrasound_cls.objects.get(
-                    maternal_visit__subject_identifier=subject_identifier)
-            except maternal_ultrasound_cls.DoesNotExist:
-                return None
-            else:
+        maternal_lab_del = self.is_maternal_labour_del()
+
+        maternal_ultrasound_cls = django_apps.get_model(
+            'td_maternal.maternalultrasoundinitial')
+        subject_identifier = self.kwargs.get('subject_identifier')
+        try:
+            maternal_ultrasound = maternal_ultrasound_cls.objects.get(
+                maternal_visit__subject_identifier=subject_identifier)
+        except maternal_ultrasound_cls.DoesNotExist:
+            return None
+        else:
+            if not maternal_lab_del:
                 return int(abs(
                     40 - ((maternal_ultrasound.edd_confirmed - get_utcnow().date()).days / 7)))
+            else:
+                return int(abs(
+                    40 - ((maternal_ultrasound.edd_confirmed - maternal_lab_del.report_datetime.date()).days / 7)))
 
     def is_maternal_labour_del(self):
         maternal_labour_del_cls = django_apps.get_model(
             'td_maternal.maternallabourdel')
         subject_identifier = self.kwargs.get('subject_identifier')
         try:
-            maternal_labour_del_cls.objects.get(
+            maternal_labour_del = maternal_labour_del_cls.objects.get(
                 subject_identifier=subject_identifier)
         except maternal_labour_del_cls.DoesNotExist:
-            return False
+            return None
         else:
-            return True
+            return maternal_labour_del
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
