@@ -5,12 +5,12 @@
 {{ dob|date:"SHORT_DATE_FORMAT" }}
 {% age_in_years dob %} yrs 
  {% if hiv_status == 'POS' %}
- 	<i class="fa  fa-plus-circle  fa-fw"></i>
+ 	<span data-toggle="tooltip" data-placement="right" title="Enrollement HIV Status" > <i class="fa  fa-plus-circle  fa-fw"></i> </span>
  {% else %}
  	{% if enrollment_hiv_status == 'NEG' %}
- 		<i class="fa  fa-minus-circle  fa-fw"></i>
+ 		<span data-toggle="tooltip" data-placement="right" title="Enrollement HIV Status"> <i  class="fa  fa-minus-circle  fa-fw"></i> </span>
 	 	{% else %}
-	 		<i class="fa  fa-question-circle  fa-fw"></i>
+	 		<span data-toggle="tooltip" data-placement="right" title="Enrollement HIV Status" > <i class="fa  fa-question-circle  fa-fw"></i> </span>
 	 	{% endif %}
  {% endif %}
 </a>
@@ -26,12 +26,12 @@
 {% endif %}
 
 <a class="list-group-item">
-	<i class="fa fa-heartbeat fa-fw"></i>
- 		{{ hiv_status }}
+	<i  class="fa fa-heartbeat fa-fw"></i>
+ 		<span data-toggle="tooltip" data-placement="right" title="Current HIV Status" class="text text-default"> {{ hiv_status }} </span>
 	{% if maternal_ga %}
-		&nbsp | &nbsp
+		&nbsp |  &nbsp
 		<i class="fa fa-hourglass-half fa-fw"></i>
-		 {{ maternal_ga }} WEEKS
+		 <span data-toggle="tooltip" data-placement="right" title="Gestational Age" class="text text-default"> {{ maternal_ga }} WEEKS </span>
 	{% endif %}
 </a>
 </div>
