@@ -76,6 +76,22 @@ class DashboardView(
             return registered_subject
 
     @property
+    def enrollment_hiv_status(self):
+        """Returns mother's current hiv status.
+        """
+        subject_identifier = self.kwargs.get('subject_identifier')
+
+        antenatal_enrollment_cls = django_apps.get_model(
+            'td_maternal.antenatalenrollment')
+        try:
+            antenatal_enrollment = antenatal_enrollment_cls.objects.get(
+                subject_identifier=subject_identifier)
+        except antenatal_enrollment_cls.DoesNotExist:
+            return None
+        else:
+            return antenatal_enrollment.enrollment_hiv_status
+
+    @property
     def hiv_status(self):
         """Returns mother's current hiv status.
         """
@@ -90,16 +106,7 @@ class DashboardView(
             maternal_status_helper = MaternalStatusHelper(latest_visit)
             return maternal_status_helper.hiv_status
         else:
-            antenatal_enrollment_cls = django_apps.get_model(
-                'td_maternal.antenatalenrollment')
-            try:
-                antenatal_enrollment = antenatal_enrollment_cls.objects.get(
-                    subject_identifier=subject_identifier)
-            except antenatal_enrollment_cls.DoesNotExist:
-                return None
-            else:
-                return antenatal_enrollment.enrollment_hiv_status
-        return None
+            return self.enrollment_hiv_status
 
     @property
     def rando_status(self):
@@ -155,6 +162,7 @@ class DashboardView(
         self.update_messages()
         context.update(subject_screening=self.subject_screening,
                        hiv_status=self.hiv_status,
+                       enrollment_hiv_status=self.enrollment_hiv_status,
                        rando_status=self.rando_status,
                        maternal_ga=self.maternal_ga)
         context = self.add_url_to_context(

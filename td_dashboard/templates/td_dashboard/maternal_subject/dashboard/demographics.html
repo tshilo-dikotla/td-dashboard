@@ -7,7 +7,7 @@
  {% if hiv_status == 'POS' %}
  	<i class="fa  fa-plus-circle  fa-fw"></i>
  {% else %}
- 	{% if hiv_status == 'NEG' %}
+ 	{% if enrollment_hiv_status == 'NEG' %}
  		<i class="fa  fa-minus-circle  fa-fw"></i>
 	 	{% else %}
 	 		<i class="fa  fa-question-circle  fa-fw"></i>
@@ -24,9 +24,14 @@
  	
 </a>
 {% endif %}
-{% if maternal_ga %}
-<a class="list-group-item"><i class="fa fa-hourglass-half fa-fw"></i>
-	{{ maternal_ga }} WEEKS
+
+<a class="list-group-item">
+	<i class="fa fa-heartbeat fa-fw"></i>
+ 		{{ hiv_status }}
+	{% if maternal_ga %}
+		&nbsp | &nbsp
+		<i class="fa fa-hourglass-half fa-fw"></i>
+		 {{ maternal_ga }} WEEKS
+	{% endif %}
 </a>
-{% endif %}
 </div>
