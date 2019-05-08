@@ -51,6 +51,12 @@ class InfantBirthValues(object):
             return None
 
     @property
+    def is_karabo_eligible(self):
+        if self.karabo_subject_screening_obj:
+            return self.karabo_subject_screening_obj.is_eligible
+        return None
+
+    @property
     def karabo_subject_consent_obj(self):
         """Returns a karabo subject consent model instance or None.
         """

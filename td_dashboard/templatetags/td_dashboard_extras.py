@@ -19,6 +19,7 @@ def karabo_subject_consent_button(infant_birth_values):
     return dict(
         add_karabo_subject_consent_href=infant_birth_values.karabo_subject_consent.href,
         karabo_subject_consent_obj=infant_birth_values.karabo_subject_consent_obj,
+        is_eligible=infant_birth_values.is_karabo_eligible,
         title=' '.join(title))
 
 
