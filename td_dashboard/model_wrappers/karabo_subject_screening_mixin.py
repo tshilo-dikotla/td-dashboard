@@ -9,7 +9,7 @@ class KaraboScreeningModelWrapperMixin:
     karabo_screening_model_wrapper_cls = KaraboSubjectScreeningModelWrapper
 
     karabo_subject_screening_cls = django_apps.get_model(
-        'td_infant.karabosubjectscreening')
+        'td_maternal.karabosubjectscreening')
 
     @property
     def karabo_subject_screening_obj(self):

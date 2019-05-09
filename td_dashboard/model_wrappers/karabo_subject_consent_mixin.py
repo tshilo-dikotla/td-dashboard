@@ -9,7 +9,7 @@ class KaraboSubjectConsentModelWrapperMixin:
     karabo_consent_model_wrapper_cls = KaraboSubjectConsentModelWrapper
 
     karabo_subject_consent_cls = django_apps.get_model(
-        'td_infant.karabosubjectconsent')
+        'td_maternal.karabosubjectconsent')
 
     @property
     def is_karabo_eligible(self):
