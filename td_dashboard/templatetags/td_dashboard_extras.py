@@ -5,21 +5,23 @@ register = template.Library()
 
 
 @register.inclusion_tag('td_dashboard/buttons/karabo_screening_button.html')
-def karabo_screening_button(infant_birth_values):
+def karabo_screening_button(model_wrapper):
     title = ['Edit subject\' Karabo screening form.']
     return dict(
-        add_karabo_subject_screening_href=infant_birth_values.karabo_eligibility.href,
-        karabo_subject_screening_obj=infant_birth_values.karabo_subject_screening_obj,
+        subject_identifier=model_wrapper.object.subject_identifier,
+        add_karabo_subject_screening_href=model_wrapper.karabo_subject_screening.href,
+        karabo_subject_screening_obj=model_wrapper.karabo_subject_screening_obj,
         title=' '.join(title))
 
 
 @register.inclusion_tag('td_dashboard/buttons/karabo_consent_button.html')
-def karabo_subject_consent_button(infant_birth_values):
+def karabo_subject_consent_button(model_wrapper):
     title = ['Edit subject\' Karabo consent form.']
     return dict(
-        add_karabo_subject_consent_href=infant_birth_values.karabo_subject_consent.href,
-        karabo_subject_consent_obj=infant_birth_values.karabo_subject_consent_obj,
-        is_eligible=infant_birth_values.is_karabo_eligible,
+        subject_identifier=model_wrapper.object.subject_identifier,
+        add_karabo_subject_consent_href=model_wrapper.karabo_subject_consent.href,
+        karabo_subject_consent_obj=model_wrapper.karabo_subject_consent_obj,
+        is_eligible=model_wrapper.is_karabo_eligible,
         title=' '.join(title))
 
 

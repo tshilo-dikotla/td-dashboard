@@ -5,9 +5,9 @@ from edc_model_wrapper import ModelWrapper
 
 class KaraboSubjectConsentModelWrapper(ModelWrapper):
 
-    model = 'td_infant.karabosubjectconsent'
+    model = 'td_maternal.karabosubjectconsent'
     next_url_name = settings.DASHBOARD_URL_NAMES.get(
-        'infant_subject_dashboard_url')
+        'subject_dashboard_url')
     next_url_attrs = ['subject_identifier']
     querystring_attrs = ['screening_identifier', 'subject_identifier']
 
@@ -15,7 +15,7 @@ class KaraboSubjectConsentModelWrapper(ModelWrapper):
     def screening_identifier(self):
         """
         """
-        model_cls = django_apps.get_model('td_infant.karabosubjectscreening')
+        model_cls = django_apps.get_model('td_maternal.karabosubjectscreening')
         try:
             karabo_model_obj = model_cls.objects.get(
                 subject_identifier=self.object.subject_identifier)
