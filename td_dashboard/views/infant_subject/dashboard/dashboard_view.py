@@ -13,12 +13,19 @@ from ....model_wrappers import (
     InfantAppointmentModelWrapper, InfantDummyConsentModelWrapper,
     InfantCrfModelWrapper, InfantRequisitionModelWrapper,
     InfantVisitModelWrapper, SubjectLocatorModelWrapper,
-    InfantBirthModelWrapper, MaternalRegisteredSubjectModelWrapper)
+    InfantBirthModelWrapper, MaternalRegisteredSubjectModelWrapper,
+    KaraboSubjectScreeningModelWrapper, KaraboSubjectConsentModelWrapper)
 
 
 class InfantBirthValues(object):
 
     infant_birth_cls = django_apps.get_model('td_infant.infantbirth')
+
+    karabo_subject_screening_cls = django_apps.get_model(
+        'td_infant.karabosubjectscreening')
+
+    karabo_subject_consent_cls = django_apps.get_model(
+        'td_infant.karabosubjectconsent')
 
     def __init__(self, subject_identifier=None):
         self.subject_identifier = subject_identifier
@@ -34,12 +41,54 @@ class InfantBirthValues(object):
             return None
 
     @property
+    def karabo_subject_screening_obj(self):
+        """Returns a karabo subject screening model instance or None.
+        """
+        try:
+            return self.karabo_subject_screening_cls.objects.get(
+                subject_identifier=self.subject_identifier)
+        except ObjectDoesNotExist:
+            return None
+
+    @property
+    def is_karabo_eligible(self):
+        if self.karabo_subject_screening_obj:
+            return self.karabo_subject_screening_obj.is_eligible
+        return None
+
+    @property
+    def karabo_subject_consent_obj(self):
+        """Returns a karabo subject consent model instance or None.
+        """
+        try:
+            return self.karabo_subject_consent_cls.objects.get(
+                subject_identifier=self.subject_identifier)
+        except ObjectDoesNotExist:
+            return None
+
+    @property
     def infant_birth(self):
         """Returns a wrapped saved or unsaved infant birth.
         """
         model_obj = self.infant_birth_obj or self.infant_birth_cls(
             subject_identifier=self.subject_identifier)
         return InfantBirthModelWrapper(model_obj=model_obj)
+
+    @property
+    def karabo_eligibility(self):
+        """Returns a wrapped saved or unsaved infant birth.
+        """
+        model_obj = self.karabo_subject_screening_obj or self.karabo_subject_screening_cls(
+            subject_identifier=self.subject_identifier)
+        return KaraboSubjectScreeningModelWrapper(model_obj=model_obj)
+
+    @property
+    def karabo_subject_consent(self):
+        """Returns a wrapped saved or unsaved infant birth.
+        """
+        model_obj = self.karabo_subject_consent_obj or self.karabo_subject_consent_cls(
+            subject_identifier=self.subject_identifier)
+        return KaraboSubjectConsentModelWrapper(model_obj=model_obj)
 
 
 class InfantBirthButtonCls(ContextMixin):

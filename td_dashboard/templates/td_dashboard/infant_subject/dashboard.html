@@ -2,6 +2,16 @@
 
 {% load staticfiles %}
 
+{% block schedule_button %}
+<span class="pull-right"><span class="text test-muted">
+    <a href="{% url infant_subject_dashboard_url subject_identifier=subject_identifier %}"
+       role="button" class="btn btn-sm btn-primary">
+        <i class="fa fa-reply fa-fw" aria-hidden="true"></i> <i class="far fa-calendar fa-fw"></i> Schedule
+    </a>
+</span></span>
+{% endblock schedule_button %}
+	            
+	            
 {% block locator_information %}{% endblock locator_information %}
 
 {% block top_bar %}
