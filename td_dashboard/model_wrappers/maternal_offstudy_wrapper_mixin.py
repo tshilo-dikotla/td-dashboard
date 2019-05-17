@@ -27,7 +27,7 @@ class MaternalOffstudyModelWrapperMixin:
 
     @property
     def maternal_offstudy_cls(self):
-        return django_apps.get_model('td_maternal.maternaloffstudy')
+        return django_apps.get_model('td_prn.maternaloffstudy')
 
     @property
     def create_maternal_offstudy_options(self):
