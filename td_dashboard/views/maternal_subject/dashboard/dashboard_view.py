@@ -12,9 +12,10 @@ from edc_navbar import NavbarViewMixin
 from edc_registration.models import RegisteredSubject
 from edc_subject_dashboard.view_mixins import SubjectDashboardViewMixin
 
-from td_maternal.action_items import MATERNAL_DEATH_REPORT_ACTION
-from td_maternal.action_items import MATERNAL_LOCATOR_ACTION, MATERNALOFF_STUDY_ACTION
+from td_maternal.action_items import MATERNAL_LOCATOR_ACTION
 from td_maternal.helper_classes import MaternalStatusHelper
+from td_prn.action_items import MATERNALOFF_STUDY_ACTION
+from td_prn.action_items import MATERNAL_DEATH_REPORT_ACTION
 
 from ....model_wrappers import (
     AppointmentModelWrapper, SubjectConsentModelWrapper,
