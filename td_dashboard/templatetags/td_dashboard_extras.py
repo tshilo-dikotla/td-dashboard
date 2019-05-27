@@ -52,11 +52,13 @@ def karabo_eligibility_button(model_wrapper):
     comment = []
     obj = model_wrapper.karabo_subject_screening_obj
     tooltip = None
-    if not obj.is_eligible:
-        comment = obj.ineligibility.split(',')
-    comment = list(set(comment))
-    comment.sort()
-    return dict(eligible=obj.is_eligible, comment=comment, tooltip=tooltip)
+    if obj:
+        if not obj.is_eligible:
+            comment = obj.ineligibility.split(',')
+        comment = list(set(comment))
+        comment.sort()
+        return dict(is_eligible=obj.is_eligible, comment=comment, tooltip=tooltip)
+    return None
 
 
 @register.inclusion_tag('td_dashboard/buttons/eligibility_button.html')

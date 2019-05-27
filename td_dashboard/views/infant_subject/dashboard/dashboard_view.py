@@ -1,13 +1,18 @@
 from django.apps import apps as django_apps
+from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.utils.safestring import mark_safe
 from django.views.generic.base import ContextMixin
 from edc_action_item.site_action_items import site_action_items
 from edc_base.view_mixins import EdcBaseViewMixin
+from edc_constants.constants import OFF_STUDY, DEAD, NEW
 from edc_dashboard.views import DashboardView as BaseDashboardView
 from edc_navbar import NavbarViewMixin
 from edc_registration.models import RegisteredSubject
 from edc_subject_dashboard.view_mixins import SubjectDashboardViewMixin
-from td_maternal.action_items import MATERNAL_LOCATOR_ACTION
+
+from td_prn.action_items import INFANTOFF_STUDY_ACTION
+from td_prn.action_items import INFANT_DEATH_REPORT_ACTION
 
 from ....model_wrappers import (
     InfantAppointmentModelWrapper, InfantDummyConsentModelWrapper,
@@ -106,21 +111,74 @@ class DashboardView(
     special_forms_include_value = "td_dashboard/infant_subject/dashboard/special_forms.html"
     maternal_dashboard_include_value = "td_dashboard/maternal_subject/dashboard/maternal_dashboard_links.html"
 
-    def get_subject_locator_or_message(self):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        self.update_messages()
+        context = self.add_url_to_context(
+            new_key='dashboard_url_name',
+            existing_key=self.dashboard_url,
+            context=context)
+        self.get_maternal_offstudy_or_message()
+        return context
+
+    def get_maternal_offstudy_or_message(self):
         obj = None
+        infant_visit_cls = django_apps.get_model(
+            'td_infant.infantvisit')
+        infant_offstudy_cls = django_apps.get_model(
+            'td_prn.infantoffstudy')
+        infant_death_cls = django_apps.get_model(
+            'td_prn.infantdeathreport')
         subject_identifier = self.kwargs.get('subject_identifier')
         try:
-            obj = self.subject_locator_model_cls.objects.get(
-                subject_identifier=subject_identifier)
+            obj = infant_visit_cls.objects.get(
+                appointment__subject_identifier=subject_identifier,
+                study_status=OFF_STUDY)
         except ObjectDoesNotExist:
-            action_cls = site_action_items.get(
-                self.subject_locator_model_cls.action_name)
-            action_item_model_cls = action_cls.action_item_model_cls()
-            try:
-                action_item_model_cls.objects.get(
+            pass
+        else:
+            if obj.survival_status == DEAD:
+                self.action_cls_item_creator(
                     subject_identifier=subject_identifier,
-                    action_type__name=MATERNAL_LOCATOR_ACTION)
-            except ObjectDoesNotExist:
-                action_cls(
-                    subject_identifier=subject_identifier)
+                    action_cls=infant_death_cls,
+                    action_type=INFANT_DEATH_REPORT_ACTION)
+            else:
+                self.action_cls_item_creator(
+                    subject_identifier=subject_identifier,
+                    action_cls=infant_offstudy_cls,
+                    action_type=INFANTOFF_STUDY_ACTION)
         return obj
+
+    def action_cls_item_creator(
+            self, subject_identifier=None, action_cls=None, action_type=None):
+        action_cls = site_action_items.get(
+            action_cls.action_name)
+        action_item_model_cls = action_cls.action_item_model_cls()
+        try:
+            action_item_model_cls.objects.get(
+                subject_identifier=subject_identifier,
+                action_type__name=action_type)
+        except ObjectDoesNotExist:
+            action_cls(
+                subject_identifier=subject_identifier)
+
+    def update_messages(self):
+        subject_identifier = self.kwargs.get('subject_identifier')
+        infant_offstudy_cls = django_apps.get_model(
+            'td_prn.infantoffstudy')
+        action_cls = site_action_items.get(
+            infant_offstudy_cls.action_name)
+        action_item_model_cls = action_cls.action_item_model_cls()
+
+        try:
+            action_item_model_cls.objects.get(
+                subject_identifier=subject_identifier,
+                action_type__name=INFANTOFF_STUDY_ACTION,
+                status=NEW)
+        except action_item_model_cls.DoesNotExist:
+            pass
+        else:
+            form = infant_offstudy_cls._meta.verbose_name
+            msg = mark_safe(
+                f'Please complete {form}, cannot add any new data.')
+            messages.add_message(self.request, messages.ERROR, msg)
