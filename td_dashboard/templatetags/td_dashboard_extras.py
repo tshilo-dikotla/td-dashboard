@@ -57,7 +57,8 @@ def karabo_eligibility_button(model_wrapper):
             comment = obj.ineligibility.split(',')
         comment = list(set(comment))
         comment.sort()
-        return dict(is_eligible=obj.is_eligible, comment=comment, tooltip=tooltip)
+        return dict(is_eligible=obj.is_eligible,
+                    comment=comment, tooltip=tooltip)
     return None
 
 
