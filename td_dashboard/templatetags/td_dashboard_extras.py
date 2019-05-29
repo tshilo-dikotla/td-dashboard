@@ -43,7 +43,22 @@ def eligibility_button(subject_screening_model_wrapper):
         comment = obj.ineligibility.split(',')
     comment = list(set(comment))
     comment.sort()
-    return dict(eligible=obj.is_eligible, comment=comment, tooltip=tooltip)
+    return dict(eligible=obj.is_eligible, comment=comment,
+                tooltip=tooltip, obj=obj)
+
+
+@register.inclusion_tag('td_dashboard/buttons/karabo_eligibility_button.html')
+def karabo_eligibility_button(model_wrapper):
+    comment = []
+    obj = model_wrapper.karabo_subject_screening_obj
+    tooltip = None
+    if obj:
+        if not obj.is_eligible:
+            comment = obj.ineligibility.split(',')
+        comment = list(set(comment))
+        comment.sort()
+        return dict(is_eligible=obj.is_eligible, comment=comment, tooltip=tooltip)
+    return None
 
 
 @register.inclusion_tag('td_dashboard/buttons/eligibility_button.html')
