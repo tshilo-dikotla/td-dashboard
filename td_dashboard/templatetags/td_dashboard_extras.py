@@ -9,6 +9,7 @@ def karabo_screening_button(model_wrapper):
     title = ['Edit subject\' Karabo screening form.']
     return dict(
         subject_identifier=model_wrapper.object.subject_identifier,
+        infant_birth=model_wrapper.infant_birth_obj,
         add_karabo_subject_screening_href=model_wrapper.karabo_subject_screening.href,
         karabo_subject_screening_obj=model_wrapper.karabo_subject_screening_obj,
         title=' '.join(title))

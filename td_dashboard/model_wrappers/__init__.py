@@ -1,3 +1,4 @@
+from .action_item_model_wrapper import ActionItemModelWrapper
 from .antenantal_visit_membership_model_wrapper import AntenatalVisitMembershipModelWrapper
 from .antenantal_visit_membership_wrapper_mixin import AntenatalVisitMembershipWrapperMixin
 from .antenatal_enrollment_model_wrapper import AntenatalEnrollmentModelWrapper
@@ -27,3 +28,4 @@ from .subject_locator_model_wrapper import SubjectLocatorModelWrapper
 from .subject_screening_model_wrapper import SubjectScreeningModelWrapper
 from .td_consent_version_model_wrapper import TDConsentVersionModelWrapper
 from .td_consent_version_model_wrapper_mixin import TDConsentVersionModelWrapperMixin
+

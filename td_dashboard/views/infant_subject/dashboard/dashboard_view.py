@@ -3,21 +3,21 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.utils.safestring import mark_safe
 from django.views.generic.base import ContextMixin
-from edc_action_item.site_action_items import site_action_items
 from edc_base.view_mixins import EdcBaseViewMixin
 from edc_constants.constants import OFF_STUDY, DEAD, NEW
 from edc_dashboard.views import DashboardView as BaseDashboardView
 from edc_navbar import NavbarViewMixin
 from edc_registration.models import RegisteredSubject
-from edc_subject_dashboard.view_mixins import SubjectDashboardViewMixin
 
+from edc_action_item.site_action_items import site_action_items
+from edc_subject_dashboard.view_mixins import SubjectDashboardViewMixin
 from td_prn.action_items import INFANTOFF_STUDY_ACTION
 from td_prn.action_items import INFANT_DEATH_REPORT_ACTION
 
 from ....model_wrappers import (
     InfantAppointmentModelWrapper, InfantDummyConsentModelWrapper,
     InfantCrfModelWrapper, InfantRequisitionModelWrapper,
-    InfantVisitModelWrapper, SubjectLocatorModelWrapper,
+    InfantVisitModelWrapper, SubjectLocatorModelWrapper, ActionItemModelWrapper,
     InfantBirthModelWrapper, MaternalRegisteredSubjectModelWrapper)
 
 
@@ -99,6 +99,7 @@ class DashboardView(
     requisition_model_wrapper_cls = InfantRequisitionModelWrapper
     consent_model = 'td_infant.infantdummysubjectconsent'
     consent_model_wrapper_cls = InfantDummyConsentModelWrapper
+    action_item_model_wrapper_cls = ActionItemModelWrapper
     navbar_name = 'td_dashboard'
     visit_attr = 'infantvisit'
     navbar_selected_item = 'infant_subject'
@@ -114,11 +115,11 @@ class DashboardView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         self.update_messages()
+        self.get_maternal_offstudy_or_message()
         context = self.add_url_to_context(
             new_key='dashboard_url_name',
             existing_key=self.dashboard_url,
             context=context)
-        self.get_maternal_offstudy_or_message()
         return context
 
     def get_maternal_offstudy_or_message(self):

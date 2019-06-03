@@ -28,3 +28,16 @@ class KaraboScreeningModelWrapperMixin:
         model_obj = self.karabo_subject_screening_obj or self.karabo_subject_screening_cls(
             subject_identifier=self.subject_identifier)
         return KaraboSubjectScreeningModelWrapper(model_obj=model_obj)
+
+    infant_birth_cls = django_apps.get_model('td_infant.infantbirth')
+
+    @property
+    def infant_birth_obj(self):
+        """Returns a infant birth model instance or None.
+        """
+        subject_identifier = self.subject_identifier + '-10'
+        try:
+            return self.infant_birth_cls.objects.get(
+                subject_identifier=subject_identifier)
+        except self.infant_birth_cls.DoesNotExist:
+            return None

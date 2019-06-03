@@ -161,6 +161,7 @@ class DashboardView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         self.update_messages()
+        self.get_maternal_offstudy_or_message()
         context.update(subject_screening=self.subject_screening,
                        hiv_status=self.hiv_status,
                        enrollment_hiv_status=self.enrollment_hiv_status,
@@ -170,7 +171,7 @@ class DashboardView(
             new_key='dashboard_url_name',
             existing_key=self.dashboard_url,
             context=context)
-        self.get_maternal_offstudy_or_message()
+
         return context
 
     def get_subject_locator_or_message(self):
@@ -220,6 +221,16 @@ class DashboardView(
                     action_type=MATERNALOFF_STUDY_ACTION)
         return obj
 
+    def update_messages(self):
+        maternal_offstudy_cls = django_apps.get_model(
+            'td_prn.maternaloffstudy')
+
+        if self.get_action_item_obj(maternal_offstudy_cls):
+            form = maternal_offstudy_cls._meta.verbose_name
+            msg = mark_safe(
+                f'Please complete {form}, cannot add any new data.')
+            messages.add_message(self.request, messages.ERROR, msg)
+
     def action_cls_item_creator(
             self, subject_identifier=None, action_cls=None, action_type=None):
         action_cls = site_action_items.get(
@@ -233,23 +244,17 @@ class DashboardView(
             action_cls(
                 subject_identifier=subject_identifier)
 
-    def update_messages(self):
+    def get_action_item_obj(self, model_cls):
         subject_identifier = self.kwargs.get('subject_identifier')
-        maternal_offstudy_cls = django_apps.get_model(
-            'td_prn.maternaloffstudy')
         action_cls = site_action_items.get(
-            maternal_offstudy_cls.action_name)
+            model_cls.action_name)
         action_item_model_cls = action_cls.action_item_model_cls()
 
         try:
-            action_item_model_cls.objects.get(
+            action_item_obj = action_item_model_cls.objects.get(
                 subject_identifier=subject_identifier,
                 action_type__name=MATERNALOFF_STUDY_ACTION,
                 status=NEW)
         except action_item_model_cls.DoesNotExist:
-            pass
-        else:
-            form = maternal_offstudy_cls._meta.verbose_name
-            msg = mark_safe(
-                f'Please complete {form}, cannot add any new data.')
-            messages.add_message(self.request, messages.ERROR, msg)
+            return None
+        return action_item_obj
