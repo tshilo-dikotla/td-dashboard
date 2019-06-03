@@ -88,7 +88,7 @@ def consent_version_button(model_wrapper):
 @register.inclusion_tag('td_dashboard/buttons/consent_button.html')
 def consent_button(model_wrapper):
     title = ['Consent subject to participate.']
-    consent_version = model_wrapper.consent.version
+    consent_version = model_wrapper.version
     return dict(
         screening_identifier=model_wrapper.object.screening_identifier,
         add_consent_href=model_wrapper.consent.href,
