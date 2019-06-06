@@ -1,19 +1,20 @@
+from td_maternal.action_items import MATERNAL_LOCATOR_ACTION
+from td_maternal.helper_classes import MaternalStatusHelper
+
 from django.apps import apps as django_apps
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import ValidationError
 from django.utils.safestring import mark_safe
-from edc_action_item.site_action_items import site_action_items
 from edc_base.utils import get_utcnow
 from edc_base.view_mixins import EdcBaseViewMixin
 from edc_constants.constants import OFF_STUDY, DEAD, NEW
 from edc_dashboard.views import DashboardView as BaseDashboardView
 from edc_navbar import NavbarViewMixin
 from edc_registration.models import RegisteredSubject
-from edc_subject_dashboard.view_mixins import SubjectDashboardViewMixin
 
-from td_maternal.action_items import MATERNAL_LOCATOR_ACTION
-from td_maternal.helper_classes import MaternalStatusHelper
+from edc_action_item.site_action_items import site_action_items
+from edc_subject_dashboard.view_mixins import SubjectDashboardViewMixin
 from td_prn.action_items import MATERNALOFF_STUDY_ACTION
 from td_prn.action_items import MATERNAL_DEATH_REPORT_ACTION
 
@@ -161,6 +162,7 @@ class DashboardView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         self.update_messages()
+        self.get_death_or_message()
         self.get_maternal_offstudy_or_message()
         context.update(subject_screening=self.subject_screening,
                        hiv_status=self.hiv_status,
@@ -193,32 +195,46 @@ class DashboardView(
                     subject_identifier=subject_identifier)
         return obj
 
-    def get_maternal_offstudy_or_message(self):
+    def get_death_or_message(self):
         obj = None
         maternal_visit_cls = django_apps.get_model(
             'td_maternal.maternalvisit')
-        maternal_offstudy_cls = django_apps.get_model(
-            'td_prn.maternaloffstudy')
         maternal_death_cls = django_apps.get_model(
             'td_prn.maternaldeathreport')
         subject_identifier = self.kwargs.get('subject_identifier')
+
         try:
             obj = maternal_visit_cls.objects.get(
                 appointment__subject_identifier=subject_identifier,
-                study_status=OFF_STUDY)
+                survival_status=DEAD)
         except ObjectDoesNotExist:
-            pass
+            self.delete_action_item_if_new(maternal_death_cls)
         else:
             if obj.survival_status == DEAD:
                 self.action_cls_item_creator(
                     subject_identifier=subject_identifier,
                     action_cls=maternal_death_cls,
                     action_type=MATERNAL_DEATH_REPORT_ACTION)
-            else:
-                self.action_cls_item_creator(
-                    subject_identifier=subject_identifier,
-                    action_cls=maternal_offstudy_cls,
-                    action_type=MATERNALOFF_STUDY_ACTION)
+
+    def get_maternal_offstudy_or_message(self):
+        obj = None
+        maternal_visit_cls = django_apps.get_model(
+            'td_maternal.maternalvisit')
+        maternal_offstudy_cls = django_apps.get_model(
+            'td_prn.maternaloffstudy')
+
+        subject_identifier = self.kwargs.get('subject_identifier')
+        try:
+            obj = maternal_visit_cls.objects.get(
+                appointment__subject_identifier=subject_identifier,
+                study_status=OFF_STUDY)
+        except ObjectDoesNotExist:
+            self.delete_action_item_if_new(maternal_offstudy_cls)
+        else:
+            self.action_cls_item_creator(
+                subject_identifier=subject_identifier,
+                action_cls=maternal_offstudy_cls,
+                action_type=MATERNALOFF_STUDY_ACTION)
         return obj
 
     def update_messages(self):
@@ -244,6 +260,11 @@ class DashboardView(
             action_cls(
                 subject_identifier=subject_identifier)
 
+    def delete_action_item_if_new(self, action_model_cls):
+        action_item_obj = self.get_action_item_obj(action_model_cls)
+        if action_item_obj:
+            action_item_obj.delete()
+
     def get_action_item_obj(self, model_cls):
         subject_identifier = self.kwargs.get('subject_identifier')
         action_cls = site_action_items.get(
@@ -253,7 +274,7 @@ class DashboardView(
         try:
             action_item_obj = action_item_model_cls.objects.get(
                 subject_identifier=subject_identifier,
-                action_type__name=MATERNALOFF_STUDY_ACTION,
+                action_type__name=model_cls.action_name,
                 status=NEW)
         except action_item_model_cls.DoesNotExist:
             return None

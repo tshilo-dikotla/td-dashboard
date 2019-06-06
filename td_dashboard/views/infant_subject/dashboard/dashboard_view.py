@@ -115,39 +115,53 @@ class DashboardView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         self.update_messages()
-        self.get_maternal_offstudy_or_message()
+        self.get_death_or_message()
+        self.get_infant_offstudy_or_message()
         context = self.add_url_to_context(
             new_key='dashboard_url_name',
             existing_key=self.dashboard_url,
             context=context)
         return context
 
-    def get_maternal_offstudy_or_message(self):
+    def get_death_or_message(self):
         obj = None
         infant_visit_cls = django_apps.get_model(
             'td_infant.infantvisit')
-        infant_offstudy_cls = django_apps.get_model(
-            'td_prn.infantoffstudy')
         infant_death_cls = django_apps.get_model(
             'td_prn.infantdeathreport')
         subject_identifier = self.kwargs.get('subject_identifier')
+
         try:
             obj = infant_visit_cls.objects.get(
                 appointment__subject_identifier=subject_identifier,
-                study_status=OFF_STUDY)
+                survival_status=DEAD)
         except ObjectDoesNotExist:
-            pass
+            self.delete_action_item_if_new(infant_death_cls)
         else:
             if obj.survival_status == DEAD:
                 self.action_cls_item_creator(
                     subject_identifier=subject_identifier,
                     action_cls=infant_death_cls,
                     action_type=INFANT_DEATH_REPORT_ACTION)
-            else:
-                self.action_cls_item_creator(
-                    subject_identifier=subject_identifier,
-                    action_cls=infant_offstudy_cls,
-                    action_type=INFANTOFF_STUDY_ACTION)
+
+    def get_infant_offstudy_or_message(self):
+        obj = None
+        infant_visit_cls = django_apps.get_model(
+            'td_infant.infantvisit')
+        infant_offstudy_cls = django_apps.get_model(
+            'td_prn.infantoffstudy')
+        subject_identifier = self.kwargs.get('subject_identifier')
+        try:
+            obj = infant_visit_cls.objects.get(
+                appointment__subject_identifier=subject_identifier,
+                study_status=OFF_STUDY)
+        except ObjectDoesNotExist:
+            self.delete_action_item_if_new(infant_offstudy_cls)
+        else:
+            self.action_cls_item_creator(
+                subject_identifier=subject_identifier,
+                action_cls=infant_offstudy_cls,
+                action_type=INFANTOFF_STUDY_ACTION)
         return obj
 
     def action_cls_item_creator(
@@ -163,22 +177,30 @@ class DashboardView(
             action_cls(
                 subject_identifier=subject_identifier)
 
-    def update_messages(self):
+    def get_action_item_obj(self, model_cls):
         subject_identifier = self.kwargs.get('subject_identifier')
-        infant_offstudy_cls = django_apps.get_model(
-            'td_prn.infantoffstudy')
-        action_cls = site_action_items.get(
-            infant_offstudy_cls.action_name)
+        action_cls = site_action_items.get(model_cls.action_name)
         action_item_model_cls = action_cls.action_item_model_cls()
 
         try:
-            action_item_model_cls.objects.get(
+            action_item_obj = action_item_model_cls.objects.get(
                 subject_identifier=subject_identifier,
-                action_type__name=INFANTOFF_STUDY_ACTION,
+                action_type__name=model_cls.action_name,
                 status=NEW)
         except action_item_model_cls.DoesNotExist:
-            pass
-        else:
+            return None
+        return action_item_obj
+
+    def delete_action_item_if_new(self, action_model_cls):
+        action_item_obj = self.get_action_item_obj(action_model_cls)
+        if action_item_obj:
+            action_item_obj.delete()
+
+    def update_messages(self):
+        infant_offstudy_cls = django_apps.get_model(
+            'td_prn.infantoffstudy')
+
+        if self.get_action_item_obj(infant_offstudy_cls):
             form = infant_offstudy_cls._meta.verbose_name
             msg = mark_safe(
                 f'Please complete {form}, cannot add any new data.')
