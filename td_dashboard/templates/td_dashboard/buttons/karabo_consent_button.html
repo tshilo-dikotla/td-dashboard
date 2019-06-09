@@ -6,8 +6,10 @@
 	           class="btn btn-success btn-sm" data-toggle="tooltip"  data-placement="right"
 	           href="{{ add_karabo_subject_consent_href }}">
 	       {% else %}
+	         {% if  not is_outside_schedule %}
 	           class="btn btn-warning btn-sm" data-toggle="tooltip"  data-placement="right"
-	       href="{{ add_karabo_subject_consent_href }}">
+	           href="{{ add_karabo_subject_consent_href }}">
+	         {% endif %}
 	       {% endif %}
 	    	Karabo Subject Consent
     {% endif %}

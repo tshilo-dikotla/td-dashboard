@@ -11,6 +11,9 @@ class KaraboSubjectConsentModelWrapperMixin:
     karabo_subject_consent_cls = django_apps.get_model(
         'td_maternal.karabosubjectconsent')
 
+    infant_appointment_cls = django_apps.get_model(
+        'td_infant.appointment')
+
     @property
     def is_karabo_eligible(self):
         if self.karabo_subject_screening_obj:

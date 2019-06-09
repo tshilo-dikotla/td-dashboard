@@ -47,11 +47,11 @@ class KaraboScreeningModelWrapperMixin:
             return None
 
     @property
-    def is_within_schedule(self):
+    def is_outside_schedule(self):
         subject_identifier = self.subject_identifier + '-10'
         latest_appointment = self.infant_appointment_cls.objects.filter(
             timepoint__gt=180,
             subject_identifier=subject_identifier).exclude(
                 appt_status=NEW_APPT)
-        return latest_appointment is None
+        return latest_appointment
 

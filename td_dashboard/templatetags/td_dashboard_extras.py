@@ -1,6 +1,5 @@
 from django import template
 from django.conf import settings
-from td_dashboard.patterns import subject_identifier
 
 register = template.Library()
 
@@ -13,7 +12,7 @@ def karabo_screening_button(model_wrapper):
         infant_birth=model_wrapper.infant_birth_obj,
         add_karabo_subject_screening_href=model_wrapper.karabo_subject_screening.href,
         karabo_subject_screening_obj=model_wrapper.karabo_subject_screening_obj,
-        is_within_schedule=model_wrapper.is_within_schedule,
+        is_outside_schedule=model_wrapper.is_outside_schedule,
         title=' '.join(title))
 
 
@@ -25,6 +24,7 @@ def karabo_subject_consent_button(model_wrapper):
         add_karabo_subject_consent_href=model_wrapper.karabo_subject_consent.href,
         karabo_subject_consent_obj=model_wrapper.karabo_subject_consent_obj,
         is_eligible=model_wrapper.is_karabo_eligible,
+        is_outside_schedule=model_wrapper.is_outside_schedule,
         title=' '.join(title))
 
 
