@@ -8,6 +8,7 @@ from .infant_appointment_model_wrapper import InfantAppointmentModelWrapper
 from .infant_birth_model_wrapper import InfantBirthModelWrapper
 from .infant_crf_model_wrapper import InfantCrfModelWrapper
 from .infant_dummy_consent_wrapper import InfantDummyConsentModelWrapper
+from .infant_offstudy_model_wrapper import InfantOffstudyModelWrapper
 from .infant_requisition_model_wrapper import InfantRequisitionModelWrapper
 from .infant_visit_model_wrapper import InfantVisitModelWrapper
 from .karabo_screening_model_wrapper import KaraboSubjectScreeningModelWrapper
@@ -28,4 +29,3 @@ from .subject_locator_model_wrapper import SubjectLocatorModelWrapper
 from .subject_screening_model_wrapper import SubjectScreeningModelWrapper
 from .td_consent_version_model_wrapper import TDConsentVersionModelWrapper
 from .td_consent_version_model_wrapper_mixin import TDConsentVersionModelWrapperMixin
-

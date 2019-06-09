@@ -16,7 +16,7 @@ from td_prn.action_items import INFANT_DEATH_REPORT_ACTION
 
 from ....model_wrappers import (
     InfantAppointmentModelWrapper, InfantDummyConsentModelWrapper,
-    InfantCrfModelWrapper, InfantRequisitionModelWrapper,
+    InfantCrfModelWrapper, InfantRequisitionModelWrapper, InfantOffstudyModelWrapper,
     InfantVisitModelWrapper, SubjectLocatorModelWrapper, ActionItemModelWrapper,
     InfantBirthModelWrapper, MaternalRegisteredSubjectModelWrapper)
 
@@ -45,6 +45,36 @@ class InfantBirthValues(object):
         model_obj = self.infant_birth_obj or self.infant_birth_cls(
             subject_identifier=self.subject_identifier)
         return InfantBirthModelWrapper(model_obj=model_obj)
+
+    @property
+    def infant_offstudy_cls(self):
+        return django_apps.get_model('td_prn.infantoffstudy')
+
+    @property
+    def infant_offstudy_model_obj(self):
+        """Returns a infant offstudy model instance or None.
+        """
+        try:
+            return self.infant_offstudy_cls.objects.get(**self.infant_offstudy_options)
+        except ObjectDoesNotExist:
+            return None
+
+    @property
+    def infant_offstudy(self):
+        """Returns a wrapped saved or unsaved infant offstudy.
+        """
+        model_obj = self.infant_offstudy_model_obj or self.infant_offstudy_cls(
+            **self.infant_offstudy_options)
+        return InfantOffstudyModelWrapper(model_obj=model_obj)
+
+    @property
+    def infant_offstudy_options(self):
+        """Returns a dictionary of options to get an existing
+        infant offstudy model instance.
+        """
+        options = dict(
+            subject_identifier=self.subject_identifier)
+        return options
 
 
 class InfantBirthButtonCls(ContextMixin):

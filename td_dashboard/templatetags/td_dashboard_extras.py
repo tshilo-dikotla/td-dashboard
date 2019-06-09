@@ -185,3 +185,13 @@ def maternal_offstudy_button(model_wrapper):
         add_maternal_offstudy_href=model_wrapper.maternal_offstudy.href,
         maternal_offstudy_model_obj=model_wrapper.maternal_offstudy_model_obj,
         title=' '.join(title))
+
+
+@register.inclusion_tag('td_dashboard/buttons/infant_offstudy_button.html')
+def infant_offstudy_button(model_wrapper):
+    title = ['Edit Offstudy.']
+    return dict(
+        subject_identifier=model_wrapper.subject_identifier,
+        add_infant_offstudy_href=model_wrapper.infant_offstudy.href,
+        infant_offstudy_model_obj=model_wrapper.infant_offstudy_model_obj,
+        title=' '.join(title))
