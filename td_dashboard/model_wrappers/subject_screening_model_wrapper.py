@@ -1,8 +1,9 @@
 from django.apps import apps as django_apps
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
-from edc_consent import ConsentModelWrapperMixin
 from edc_model_wrapper import ModelWrapper
+
+from edc_consent import ConsentModelWrapperMixin
 
 from .antenantal_visit_membership_wrapper_mixin import AntenatalVisitMembershipWrapperMixin
 from .antenatal_enrollment_wrapper_mixin import AntenatalEnrollmentModelWrapperMixin
@@ -49,10 +50,6 @@ class SubjectScreeningModelWrapper(
         return options
 
     @property
-    def consent_options(self):
-        return dict(screening_identifier=self.object.screening_identifier)
-
-    @property
     def consent_model_obj(self):
         consent_model_cls = django_apps.get_model(
             self.consent_model_wrapper_cls.model)
@@ -62,7 +59,7 @@ class SubjectScreeningModelWrapper(
             return None
 
     @property
-    def version(self):
+    def consent_version(self):
         consent_version_cls = django_apps.get_model(
             'td_maternal.tdconsentversion')
         try:
