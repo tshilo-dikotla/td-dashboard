@@ -2,12 +2,15 @@
 	<a id="karabosubjectscreening_add_{{ subject_identifier }}"
 	 	title="{{ title }}"
 	 	
+	 	{{ is_outside_schedule }}
 	 	{% if karabo_subject_screening_obj %}
 	            class="btn btn-success btn-sm" data-toggle="tooltip"  data-placement="right"
 	            href="{{ add_karabo_subject_screening_href }}">
 	        {% else %}
+	        	{% if is_within_schedule %}
 	            class="btn btn-warning btn-sm" data-toggle="tooltip"  data-placement="right"
 	        href="{{ add_karabo_subject_screening_href }}">
+	        {% endif %}
 	        {% endif %}
 	     	Karabo Screening
 	 </a>

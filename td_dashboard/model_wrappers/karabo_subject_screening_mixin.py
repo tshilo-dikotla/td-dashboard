@@ -1,5 +1,6 @@
 from django.apps import apps as django_apps
 from django.core.exceptions import ObjectDoesNotExist
+from edc_appointment.constants import NEW_APPT
 
 from .karabo_screening_model_wrapper import KaraboSubjectScreeningModelWrapper
 
@@ -10,6 +11,9 @@ class KaraboScreeningModelWrapperMixin:
 
     karabo_subject_screening_cls = django_apps.get_model(
         'td_maternal.karabosubjectscreening')
+
+    infant_appointment_cls = django_apps.get_model(
+        'td_infant.appointment')
 
     @property
     def karabo_subject_screening_obj(self):
@@ -41,3 +45,13 @@ class KaraboScreeningModelWrapperMixin:
                 subject_identifier=subject_identifier)
         except self.infant_birth_cls.DoesNotExist:
             return None
+
+    @property
+    def is_within_schedule(self):
+        subject_identifier = self.subject_identifier + '-10'
+        latest_appointment = self.infant_appointment_cls.objects.filter(
+            timepoint__gt=180,
+            subject_identifier=subject_identifier).exclude(
+                appt_status=NEW_APPT)
+        return latest_appointment is None
+
