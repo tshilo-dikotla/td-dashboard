@@ -1,5 +1,6 @@
 from django import template
 from django.conf import settings
+from td_dashboard.patterns import subject_identifier
 
 register = template.Library()
 
@@ -79,18 +80,19 @@ def antenatal_enrol_eligibility_button(model_wrapper):
 def consent_version_button(model_wrapper):
     title = ['Add Consent Version.']
     return dict(
-        consent_versioned=model_wrapper.consent_version,
+        consent_versioned=model_wrapper.td_consent_version,
         screening_identifier=model_wrapper.object.screening_identifier,
-        add_consent_version_href=model_wrapper.consent_version.href,
+        add_consent_version_href=model_wrapper.td_consent_version.href,
         title=' '.join(title))
 
 
 @register.inclusion_tag('td_dashboard/buttons/consent_button.html')
 def consent_button(model_wrapper):
     title = ['Consent subject to participate.']
-    consent_version = model_wrapper.version
+    consent_version = model_wrapper.consent_version
     return dict(
         screening_identifier=model_wrapper.object.screening_identifier,
+        subject_identifier=model_wrapper.object.subject_identifier,
         add_consent_href=model_wrapper.consent.href,
         consent_version=consent_version,
         title=' '.join(title))

@@ -20,7 +20,7 @@ td_dashboard.append_item(
     NavbarItem(
         name='consented_subject',
         title='Maternal Subjects',
-        label='maternal_subjects',
+        label='maternal subjects',
         fa_icon='far fa-user-circle',
         url_name=settings.DASHBOARD_URL_NAMES[
             'subject_listboard_url'],
@@ -30,7 +30,7 @@ td_dashboard.append_item(
     NavbarItem(
         name='infant_subject',
         title='Infant Subjects',
-        label='infant_subjects',
+        label='infant subjects',
         fa_icon='far fa-user-circle',
         url_name=settings.DASHBOARD_URL_NAMES[
             'infant_listboard_url'],
