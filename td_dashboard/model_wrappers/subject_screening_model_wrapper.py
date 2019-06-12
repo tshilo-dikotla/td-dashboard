@@ -1,9 +1,11 @@
 from django.apps import apps as django_apps
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
+from edc_constants.constants import OFF_STUDY
 from edc_model_wrapper import ModelWrapper
 
 from edc_consent import ConsentModelWrapperMixin
+from td_prn.action_items import MATERNALOFF_STUDY_ACTION
 
 from .antenantal_visit_membership_wrapper_mixin import AntenatalVisitMembershipWrapperMixin
 from .antenatal_enrollment_wrapper_mixin import AntenatalEnrollmentModelWrapperMixin
@@ -68,3 +70,19 @@ class SubjectScreeningModelWrapper(
         except consent_version_cls.DoesNotExist:
             return None
         return consent_version_obj.version
+
+    @property
+    def offstudy_obj(self):
+        maternal_offstudy_cls = django_apps.get_model(
+            'td_prn.maternaloffstudy')
+        infant_offstudy_cls = django_apps.get_model(
+            'td_prn.infantoffstudy')
+        try:
+            return maternal_offstudy_cls.objects.get(
+                subject_identifier=self.object.subject_identifier)
+        except maternal_offstudy_cls.DoesNotExist:
+            try:
+                return infant_offstudy_cls.objects.get(
+                    subject_identifier=self.object.subject_identifier + '-10')
+            except infant_offstudy_cls.DoesNotExist:
+                return None

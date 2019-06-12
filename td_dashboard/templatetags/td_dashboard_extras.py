@@ -7,24 +7,28 @@ register = template.Library()
 @register.inclusion_tag('td_dashboard/buttons/karabo_screening_button.html')
 def karabo_screening_button(model_wrapper):
     title = ['Edit subject\' Karabo screening form.']
+    show_karabo_forms = (not model_wrapper.is_outside_schedule
+                         and not model_wrapper.offstudy_obj)
     return dict(
         subject_identifier=model_wrapper.object.subject_identifier,
         infant_birth=model_wrapper.infant_birth_obj,
         add_karabo_subject_screening_href=model_wrapper.karabo_subject_screening.href,
         karabo_subject_screening_obj=model_wrapper.karabo_subject_screening_obj,
-        is_outside_schedule=model_wrapper.is_outside_schedule,
+        show_karabo_forms=show_karabo_forms,
         title=' '.join(title))
 
 
 @register.inclusion_tag('td_dashboard/buttons/karabo_consent_button.html')
 def karabo_subject_consent_button(model_wrapper):
     title = ['Edit subject\' Karabo consent form.']
+    show_karabo_forms = (not model_wrapper.is_outside_schedule
+                         and not model_wrapper.offstudy_obj)
     return dict(
         subject_identifier=model_wrapper.object.subject_identifier,
         add_karabo_subject_consent_href=model_wrapper.karabo_subject_consent.href,
         karabo_subject_consent_obj=model_wrapper.karabo_subject_consent_obj,
         is_eligible=model_wrapper.is_karabo_eligible,
-        is_outside_schedule=model_wrapper.is_outside_schedule,
+        show_karabo_forms=show_karabo_forms,
         title=' '.join(title))
 
 

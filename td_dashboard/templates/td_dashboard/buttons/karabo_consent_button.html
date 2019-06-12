@@ -1,12 +1,11 @@
 <a id="karabosubjectconsent_add_{{ subject_identifier }}"
  	title="{{ title }}"
- 	
  	{% if is_eligible %}
 		{% if karabo_subject_consent_obj %}
 	           class="btn btn-success btn-sm" data-toggle="tooltip"  data-placement="right"
 	           href="{{ add_karabo_subject_consent_href }}">
 	       {% else %}
-	         {% if  not is_outside_schedule %}
+	         {% if show_karabo_forms%}
 	           class="btn btn-warning btn-sm" data-toggle="tooltip"  data-placement="right"
 	           href="{{ add_karabo_subject_consent_href }}">
 	         {% endif %}
