@@ -152,6 +152,16 @@ def maternal_labour_del_button(model_wrapper):
         title=' '.join(title),)
 
 
+@register.inclusion_tag('td_dashboard/buttons/maternal_contact_button.html')
+def maternal_contact_button(model_wrapper):
+    title = ['subject maternal contact.']
+    return dict(
+        subject_identifier=model_wrapper.object.subject_identifier,
+        add_maternal_contact_href=model_wrapper.maternal_contact.href,
+        maternal_contact_obj=model_wrapper.maternal_contact_model_obj,
+        title=' '.join(title),)
+
+
 @register.inclusion_tag('td_dashboard/buttons/dashboard_button.html')
 def dashboard_button(model_wrapper):
     subject_dashboard_url = settings.DASHBOARD_URL_NAMES.get(

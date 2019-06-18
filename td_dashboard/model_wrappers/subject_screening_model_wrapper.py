@@ -12,6 +12,7 @@ from .antenantal_visit_membership_wrapper_mixin import AntenatalVisitMembershipW
 from .antenatal_enrollment_wrapper_mixin import AntenatalEnrollmentModelWrapperMixin
 from .karabo_subject_consent_mixin import KaraboSubjectConsentModelWrapperMixin
 from .karabo_subject_screening_mixin import KaraboScreeningModelWrapperMixin
+from .maternal_contact_model_wrapper_mixin import MaternalContactModelWrapperMixin
 from .maternal_labour_del_wrapper_mixin import MaternalLabourDelModelWrapperMixin
 from .maternal_locator_wrapper_mixin import MaternalLocatorModelWrapperMixin
 from .maternal_offstudy_wrapper_mixin import MaternalOffstudyModelWrapperMixin
@@ -30,7 +31,9 @@ class SubjectScreeningModelWrapper(
         MaternalLocatorModelWrapperMixin,
         MaternalOffstudyModelWrapperMixin,
         SpecimenConsentModelWrapperMixin,
-        TDConsentVersionModelWrapperMixin, ModelWrapper):
+        TDConsentVersionModelWrapperMixin,
+        MaternalContactModelWrapperMixin,
+        ModelWrapper):
 
     consent_model_wrapper_cls = SubjectConsentModelWrapper
     model = 'td_maternal.subjectscreening'
