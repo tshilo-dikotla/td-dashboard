@@ -1,7 +1,8 @@
+from dateutil import relativedelta
 from django.apps import apps as django_apps
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
-from edc_constants.constants import OFF_STUDY
+from edc_base.utils import get_utcnow
 from edc_model_wrapper import ModelWrapper
 
 from edc_consent import ConsentModelWrapperMixin
@@ -86,3 +87,11 @@ class SubjectScreeningModelWrapper(
                     subject_identifier=self.object.subject_identifier + '-10')
             except infant_offstudy_cls.DoesNotExist:
                 return None
+
+    @property
+    def infant_age(self):
+        if self.maternal_labour_del_model_obj:
+            birth_datetime = self.maternal_labour_del_model_obj.delivery_datetime
+            difference = relativedelta.relativedelta(get_utcnow(), birth_datetime)
+            return difference.months
+        return None
