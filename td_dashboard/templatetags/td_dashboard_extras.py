@@ -158,7 +158,6 @@ def maternal_contact_button(model_wrapper):
     return dict(
         subject_identifier=model_wrapper.object.subject_identifier,
         add_maternal_contact_href=model_wrapper.maternal_contact.href,
-        maternal_contact_obj=model_wrapper.maternal_contact_model_obj,
         title=' '.join(title),)
 
 
