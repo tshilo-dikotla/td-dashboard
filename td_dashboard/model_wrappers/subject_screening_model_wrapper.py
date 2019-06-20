@@ -99,5 +99,5 @@ class SubjectScreeningModelWrapper(
             months = 0
             if difference.years > 0:
                 months = difference.years * 12
-            return months + difference.months < 22
+            return (months + difference.months) < 22
         return False
