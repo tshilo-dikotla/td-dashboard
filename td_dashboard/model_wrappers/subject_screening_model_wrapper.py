@@ -96,5 +96,8 @@ class SubjectScreeningModelWrapper(
         if self.maternal_labour_del_model_obj:
             birth_datetime = self.maternal_labour_del_model_obj.delivery_datetime
             difference = relativedelta.relativedelta(get_utcnow(), birth_datetime)
-            return difference.months < 22
+            months = 0
+            if difference.years > 0:
+                months = difference.years * 12
+            return months + difference.months < 22
         return False
