@@ -19,9 +19,9 @@ class MaternalContactModelWrapperMixin:
 
     @property
     def maternal_contact(self):
-        """Returns a wrapped saved or unsaved maternal contact.
+        """Returns a wrapped unsaved maternal contact.
         """
-        model_obj = self.maternal_contact_model_obj or self.maternal_contact_cls(
+        model_obj = self.maternal_contact_cls(
             **self.create_maternal_contact_options)
         return self.maternal_contact_model_wrapper_cls(model_obj=model_obj)
 
