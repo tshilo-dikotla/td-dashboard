@@ -10,7 +10,7 @@ def karabo_screening_button(model_wrapper):
     show_karabo_forms = (not model_wrapper.is_outside_schedule
                          and not model_wrapper.offstudy_obj)
 
-    infant_age_valid = model_wrapper.infant_age < 22 if model_wrapper.infant_age else None
+    print(show_karabo_forms, '<<<<<<<<<<<<<<<<<<<<<<', model_wrapper.infant_age_valid)
 
     return dict(
         subject_identifier=model_wrapper.object.subject_identifier,
@@ -18,7 +18,7 @@ def karabo_screening_button(model_wrapper):
         add_karabo_subject_screening_href=model_wrapper.karabo_subject_screening.href,
         karabo_subject_screening_obj=model_wrapper.karabo_subject_screening_obj,
         show_karabo_forms=show_karabo_forms,
-        infant_age_valid=infant_age_valid,
+        infant_age_valid=model_wrapper.infant_age_valid,
         title=' '.join(title))
 
 
@@ -27,14 +27,13 @@ def karabo_subject_consent_button(model_wrapper):
     title = ['Edit subject\' Karabo consent form.']
     show_karabo_forms = (not model_wrapper.is_outside_schedule
                          and not model_wrapper.offstudy_obj)
-    infant_age_valid = model_wrapper.infant_age < 22 if model_wrapper.infant_age else None
     return dict(
         subject_identifier=model_wrapper.object.subject_identifier,
         add_karabo_subject_consent_href=model_wrapper.karabo_subject_consent.href,
         karabo_subject_consent_obj=model_wrapper.karabo_subject_consent_obj,
         is_eligible=model_wrapper.is_karabo_eligible,
         show_karabo_forms=show_karabo_forms,
-        infant_age_valid=infant_age_valid,
+        infant_age_valid=model_wrapper.infant_age_valid,
         title=' '.join(title))
 
 

@@ -92,9 +92,9 @@ class SubjectScreeningModelWrapper(
                 return None
 
     @property
-    def infant_age(self):
+    def infant_age_valid(self):
         if self.maternal_labour_del_model_obj:
             birth_datetime = self.maternal_labour_del_model_obj.delivery_datetime
             difference = relativedelta.relativedelta(get_utcnow(), birth_datetime)
-            return difference.months
-        return None
+            return difference.months < 22
+        return False
