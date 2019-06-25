@@ -175,31 +175,27 @@ class DashboardView(
             existing_key=self.dashboard_url,
             context=context)
 
-        for visit_schedule in site_visit_schedules.visit_schedules.values():
-            for schedule in visit_schedule.schedules.values():
-                try:
-                    onschedule_model_obj = schedule.onschedule_model_cls.objects.get(
-                        subject_identifier=self.subject_identifier)
-                except ObjectDoesNotExist:
-                    pass
-                else:
-
-                    self.current_schedule = schedule
-                    self.current_visit_schedule = visit_schedule
-                    self.current_onschedule_model = onschedule_model_obj
-                    self.onschedule_models.append(onschedule_model_obj)
-                    self.visit_schedules.update(
-                        {visit_schedule.name: visit_schedule})
-
-        context.update(
-            visit_schedules=self.visit_schedules,
-            current_onschedule_model=self.current_onschedule_model,
-            onschedule_models=self.onschedule_models,
-            current_schedule=self.current_schedule,
-            current_visit_schedule=self.current_visit_schedule)
         return context
 
-        return context
+    def set_current_schedule(self, onschedule_model_obj=None,
+                             schedule=None, visit_schedule=None,
+                             is_onschedule=True):
+        if onschedule_model_obj:
+            if is_onschedule:
+                self.current_schedule = schedule
+                self.current_visit_schedule = visit_schedule
+                self.current_onschedule_model = onschedule_model_obj
+            self.onschedule_models.append(onschedule_model_obj)
+            self.visit_schedules.update(
+                {visit_schedule.name: visit_schedule})
+
+    def get_onschedule_model_obj(self, schedule):
+        try:
+            return schedule.onschedule_model_cls.objects.get(
+                subject_identifier=self.subject_identifier,
+                schedule_name=schedule.name)
+        except ObjectDoesNotExist:
+            return None
 
     def get_subject_locator_or_message(self):
         obj = None
