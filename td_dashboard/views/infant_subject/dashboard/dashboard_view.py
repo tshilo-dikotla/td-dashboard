@@ -1,8 +1,10 @@
+from dateutil import relativedelta
 from django.apps import apps as django_apps
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.utils.safestring import mark_safe
 from django.views.generic.base import ContextMixin
+from edc_base.utils import get_utcnow
 from edc_base.view_mixins import EdcBaseViewMixin
 from edc_constants.constants import OFF_STUDY, DEAD, NEW
 from edc_dashboard.views import DashboardView as BaseDashboardView
@@ -76,6 +78,18 @@ class InfantBirthValues(object):
         options = dict(
             subject_identifier=self.subject_identifier)
         return options
+
+    @property
+    def infant_age(self):
+        if self.infant_birth_obj:
+            birth_date = self.infant_birth_obj.dob
+            difference = relativedelta.relativedelta(
+                get_utcnow().date(), birth_date)
+            months = 0
+            if difference.years > 0:
+                months = difference.years * 12
+            return months + difference.months
+        return None
 
 
 class InfantBirthButtonCls(ContextMixin):
