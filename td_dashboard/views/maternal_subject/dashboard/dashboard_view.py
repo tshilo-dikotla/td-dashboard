@@ -1,6 +1,6 @@
 from td_maternal.action_items import MATERNAL_LOCATOR_ACTION
 from td_maternal.helper_classes import MaternalStatusHelper
-
+from dateutil import relativedelta
 from django.apps import apps as django_apps
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
@@ -14,6 +14,7 @@ from edc_navbar import NavbarViewMixin
 from edc_registration.models import RegisteredSubject
 
 from edc_action_item.site_action_items import site_action_items
+from edc_appointment.constants import NEW_APPT
 from edc_subject_dashboard.view_mixins import SubjectDashboardViewMixin
 from edc_visit_schedule.site_visit_schedules import site_visit_schedules
 from td_prn.action_items import MATERNALOFF_STUDY_ACTION
@@ -163,6 +164,7 @@ class DashboardView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         self.update_messages()
+        self.update_karabo_message()
         self.get_death_or_message()
         self.get_maternal_offstudy_or_message()
         context.update(subject_screening=self.subject_screening,
@@ -267,6 +269,71 @@ class DashboardView(
             msg = mark_safe(
                 f'Please complete {form}, cannot add any new data.')
             messages.add_message(self.request, messages.ERROR, msg)
+
+    def update_karabo_message(self):
+        karabo_screening_cls = django_apps.get_model(
+            'td_maternal.karabosubjectscreening')
+        karabo_consent_cls = django_apps.get_model(
+            'td_maternal.karabosubjectconsent')
+
+        try:
+            karabo_screening_obj = karabo_screening_cls.objects.get(
+                subject_identifier=self.kwargs.get('subject_identifier'))
+        except karabo_screening_cls.DoesNotExist:
+            if (not self.offstudy_obj and not self.is_outside_schedule and
+                    self.infant_age_valid):
+                form = karabo_screening_cls._meta.verbose_name
+                msg = mark_safe(
+                    'Participant is eligible to partake in the Karabo study.'
+                    f'Please complete {form}.')
+                messages.add_message(self.request, messages.WARNING, msg)
+        else:
+            if karabo_screening_obj.is_eligible:
+                form = karabo_consent_cls._meta.verbose_name
+                msg = mark_safe(
+                    'Participant is eligible to partake in the Karabo study.'
+                    f'Please complete {form}.')
+                messages.add_message(self.request, messages.WARNING, msg)
+
+    @property
+    def is_outside_schedule(self):
+        subject_identifier = self.kwargs.get('subject_identifier')
+        infant_appointment_cls = django_apps.get_model(
+            'td_infant.appointment')
+        subject_identifier = subject_identifier + '-10'
+        latest_appointment = infant_appointment_cls.objects.filter(
+            timepoint__gt=180,
+            subject_identifier=subject_identifier).exclude(
+                appt_status=NEW_APPT)
+        return latest_appointment
+
+    @property
+    def offstudy_obj(self):
+        subject_identifier = self.kwargs.get('subject_identifier')
+        maternal_offstudy_cls = django_apps.get_model(
+            'td_prn.maternaloffstudy')
+        infant_offstudy_cls = django_apps.get_model(
+            'td_prn.infantoffstudy')
+        try:
+            return maternal_offstudy_cls.objects.get(
+                subject_identifier=subject_identifier)
+        except maternal_offstudy_cls.DoesNotExist:
+            try:
+                return infant_offstudy_cls.objects.get(
+                    subject_identifier=subject_identifier + '-10')
+            except infant_offstudy_cls.DoesNotExist:
+                return None
+
+    @property
+    def infant_age_valid(self):
+        if self.is_maternal_labour_del():
+            birth_datetime = self.is_maternal_labour_del().delivery_datetime
+            difference = relativedelta.relativedelta(get_utcnow(), birth_datetime)
+            months = 0
+            if difference.years > 0:
+                months = difference.years * 12
+            return (months + difference.months) < 21
+        return False
 
     def action_cls_item_creator(
             self, subject_identifier=None, action_cls=None, action_type=None):
