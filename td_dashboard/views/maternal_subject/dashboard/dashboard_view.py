@@ -3,7 +3,7 @@ from td_maternal.helper_classes import MaternalStatusHelper
 from dateutil import relativedelta
 from django.apps import apps as django_apps
 from django.contrib import messages
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.core.exceptions import ValidationError
 from django.utils.safestring import mark_safe
 from edc_base.utils import get_utcnow
@@ -288,12 +288,18 @@ class DashboardView(
                     f'Please complete {form}.')
                 messages.add_message(self.request, messages.WARNING, msg)
         else:
-            if karabo_screening_obj.is_eligible:
-                form = karabo_consent_cls._meta.verbose_name
-                msg = mark_safe(
-                    'Participant is eligible to partake in the Karabo study.'
-                    f'Please complete {form}.')
-                messages.add_message(self.request, messages.WARNING, msg)
+            try:
+                karabo_consent_cls.objects.get(
+                    subject_identifier=self.kwargs.get('subject_identifier'))
+            except karabo_consent_cls.DoesNotExist:
+                if karabo_screening_obj.is_eligible:
+                    form = karabo_consent_cls._meta.verbose_name
+                    msg = mark_safe(
+                        'Participant is eligible to partake in the Karabo study.'
+                        f'Please complete {form}.')
+                    messages.add_message(self.request, messages.WARNING, msg)
+            except MultipleObjectsReturned:
+                pass
 
     @property
     def is_outside_schedule(self):
