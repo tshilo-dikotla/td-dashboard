@@ -298,8 +298,10 @@ class DashboardView(
                         'Participant is eligible to partake in the Karabo study.'
                         f'Please complete {form}.')
                     messages.add_message(self.request, messages.WARNING, msg)
-            except MultipleObjectsReturned:
-                pass
+            else:
+                msg = mark_safe(
+                    'Participant has been enrolled in the Karabo study.')
+                messages.add_message(self.request, messages.SUCCESS, msg)
 
     @property
     def is_outside_schedule(self):
