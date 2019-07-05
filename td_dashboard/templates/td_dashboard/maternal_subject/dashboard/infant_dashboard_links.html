@@ -1,0 +1,13 @@
+{% load td_dashboard_extras %}
+{% if infant_registered_subject %}
+<table class="table table-condensed">
+    <thead></thead>
+    <tbody>
+        <tr>
+        <td>
+			{% infant_dashboard_button infant_registered_subject %}
+		</td>
+		</tr>
+    </tbody>
+</table>
+{% endif %}

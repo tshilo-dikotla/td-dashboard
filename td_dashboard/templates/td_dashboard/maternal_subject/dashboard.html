@@ -1,0 +1,33 @@
+{% extends 'edc_subject_dashboard/dashboard.html' %}
+{% load td_dashboard_extras %}
+
+{% load staticfiles %}
+
+{% block locator_information %}{% endblock locator_information %}
+
+{% block top_bar %}
+
+    {% include "td_dashboard/maternal_subject/dashboard/top_bar.html" %}
+
+{% endblock top_bar %}
+
+{% block dashboard_schedule_footer %}
+				
+	{% subject_schedule_footer_row subject_identifier current_visit_schedule current_schedule subject_dashboard_url %}
+{% endblock dashboard_schedule_footer %}
+
+{% block appointments_schedule_footer %}
+				
+	{% subject_schedule_footer_row subject_identifier visit_schedule schedule subject_dashboard_url %}
+{% endblock appointments_schedule_footer %}	
+
+
+{% block side_bar %}
+		
+	    {% block demographics %}   
+	
+    		{% include 'td_dashboard/maternal_subject/dashboard/sidebar.html' %}
+
+		{% endblock demographics %}
+ 
+{% endblock side_bar %}

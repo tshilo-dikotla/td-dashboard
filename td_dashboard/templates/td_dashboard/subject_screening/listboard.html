@@ -1,0 +1,95 @@
+{% extends "edc_dashboard/listboard.html" %}
+{% load admin_urls %}
+{% load edc_base_extras %}
+{% load td_dashboard_extras %}
+             
+{% block listboard_panel %}
+    <a id="subjectscreening_add" title="add eligibility" class="btn btn-sm btn-default" role="button" 
+        href="{{ subject_screening_add_url }}?next={{ screening_listboard_url }}">
+            <i class="fa fa-plus fa-sm"></i> Add Subject Screening
+    </a>
+    <a id="return_to_home" title="go back" class="btn btn-sm btn-default" role="button" 
+        href="/">
+            <i class="fa fa-arrow-left fa-sm"></i> Go Back
+    </a>
+{% endblock listboard_panel %}
+
+
+{% block listboard_table_header %}
+    <!-- begin results header -->
+    <th>#</th>
+    <th></th>
+    <th>Antenatal Enrollment</th>
+    <th>Antenatal Visit Membership</th>
+    <th>Maternal Lab Del</th>
+    <th>Screening Identifier</th>
+    <th>Subject Identifier</th>
+    <th>Age</th>
+    <th>User</th>
+    <!-- end results header -->
+{% endblock listboard_table_header %}
+
+
+{% block listboard_table_button_column %}
+    <td style="white-space: nowrap">
+    <div class="btn-group">
+    {% screening_button result %}
+    {% if not result.is_eligible %}
+    	{% eligibility_button result %}
+    {% endif %}
+    {% if result.is_eligible %}
+    	{% if not result.td_consent_version %}
+    		{% consent_version_button result %}
+    	{%else%}
+	        {% if not result.consent %}
+	        	{% consent_button result %}
+	        {% else %}
+	        {% specimen_consent_button result %}
+	        
+	        {% if result.antenatal_enrollment%}
+	        	{% if result.antenatal_enrollment.is_eligible %}
+	        		{% dashboard_button result %}
+	        	{%else%}
+	        		{% antenatal_enrol_eligibility_button result %}
+	        	{% endif %}
+	        {% endif %}
+	        {% endif %}
+	     {% endif %}
+    {% endif %}
+    </div>
+    </td>
+   
+   	<td style="white-space: nowrap">
+    <div class="btn-group">
+    {% if result.is_consented and result.specimen_consent %}
+		{% antenatal_enrollment_button result %}
+    {% endif %}
+    </div>
+    </td>
+    
+    <td style="white-space: nowrap">
+    <div class="btn-group">
+    {% if result.antenatal_enrollment and result.antenatal_enrollment.is_eligible %}
+		{% antenatal_visit_membership_button result %}
+    {% endif %}
+    </div>
+    </td>
+    
+    <td style="white-space: nowrap">
+    <div class="btn-group">
+    {% if result.antenatal_visit_membership %}
+        {% maternal_labour_del_button result %}
+    {% endif %}
+    </div>
+    </td>
+    
+{% endblock listboard_table_button_column %}
+
+
+{% block listboard_table_columns %}
+    <td>{{ result.screening_identifier }} </td>
+    <td nowrap>{% if "085" in result.subject_identifier %}{{ result.subject_identifier }}{% endif %}</td>
+    <td nowrap>{{ result.age_in_years }} yrs</td>
+    <td nowrap>{{ result.user_created }}</td>
+
+{% endblock listboard_table_columns %}

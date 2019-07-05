@@ -1,0 +1,16 @@
+<a id="karabosubjectconsent_add_{{ subject_identifier }}"
+ 	title="{{ title }}"
+ 	{% if is_eligible %}
+		{% if karabo_subject_consent_obj %}
+	           class="btn btn-success btn-sm" data-toggle="tooltip"  data-placement="right"
+	           href="{{ add_karabo_subject_consent_href }}">
+	       {% else %}
+	         {% if show_karabo_forms and infant_age_valid %}
+	           class="btn btn-warning btn-sm" data-toggle="tooltip"  data-placement="right"
+	           href="{{ add_karabo_subject_consent_href }}">
+	         {% endif %}
+	       {% endif %}
+	    	Karabo Subject Consent
+    {% endif %}
+ </a>
+ 

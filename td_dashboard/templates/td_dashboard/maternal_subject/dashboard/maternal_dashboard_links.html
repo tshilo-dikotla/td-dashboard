@@ -1,0 +1,13 @@
+{% load td_dashboard_extras %}
+{% if maternal_registered_subject %}
+<table class="table table-condensed">
+    <thead></thead>
+    <tbody>
+        <tr>
+        <td>
+			{% dashboard_button maternal_registered_subject %}
+		</td>
+		</tr>
+    </tbody>
+</table>
+{% endif %}
