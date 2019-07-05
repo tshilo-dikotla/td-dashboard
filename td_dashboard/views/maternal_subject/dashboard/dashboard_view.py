@@ -1,14 +1,10 @@
 from td_maternal.action_items import MATERNAL_LOCATOR_ACTION
 from td_maternal.helper_classes import MaternalStatusHelper
-from dateutil import relativedelta
 from django.apps import apps as django_apps
-from django.contrib import messages
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import ValidationError
-from django.utils.safestring import mark_safe
 from edc_base.utils import get_utcnow
 from edc_base.view_mixins import EdcBaseViewMixin
-from edc_constants.constants import OFF_STUDY, DEAD, NEW
 from edc_dashboard.views import DashboardView as BaseDashboardView
 from edc_navbar import NavbarViewMixin
 from edc_registration.models import RegisteredSubject
@@ -25,10 +21,11 @@ from ....model_wrappers import (
     MaternalVisitModelWrapper, SubjectLocatorModelWrapper,
     MaternalCrfModelWrapper, MaternalRequisitionModelWrapper,
     SubjectScreeningModelWrapper)
+from ...view_mixin import DashboardViewMixin
 
 
 class DashboardView(
-        EdcBaseViewMixin, SubjectDashboardViewMixin,
+        DashboardViewMixin, EdcBaseViewMixin, SubjectDashboardViewMixin,
         NavbarViewMixin, BaseDashboardView):
 
     dashboard_url = 'subject_dashboard_url'
@@ -163,10 +160,19 @@ class DashboardView(
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        self.update_messages()
+
+        maternal_offstudy_cls = django_apps.get_model('td_prn.maternaloffstudy')
+        maternal_visit_cls = django_apps.get_model('td_maternal.maternalvisit')
+        maternal_death_cls = django_apps.get_model('td_prn.maternaldeathreport')
+
+        self.update_messages(offstudy_cls=maternal_offstudy_cls)
         self.update_karabo_message()
-        self.get_death_or_message()
-        self.get_maternal_offstudy_or_message()
+        self.get_death_or_message(visit_cls=maternal_visit_cls,
+                                  death_cls=maternal_death_cls,
+                                  death_report_action=MATERNAL_DEATH_REPORT_ACTION)
+        self.get_offstudy_or_message(visit_cls=maternal_visit_cls,
+                                     offstudy_cls=maternal_offstudy_cls,
+                                     offstudy_action=MATERNALOFF_STUDY_ACTION)
         context.update(subject_screening=self.subject_screening,
                        hiv_status=self.hiv_status,
                        enrollment_hiv_status=self.enrollment_hiv_status,
@@ -217,161 +223,3 @@ class DashboardView(
                 action_cls(
                     subject_identifier=subject_identifier)
         return obj
-
-    def get_death_or_message(self):
-        obj = None
-        maternal_visit_cls = django_apps.get_model(
-            'td_maternal.maternalvisit')
-        maternal_death_cls = django_apps.get_model(
-            'td_prn.maternaldeathreport')
-        subject_identifier = self.kwargs.get('subject_identifier')
-
-        try:
-            obj = maternal_visit_cls.objects.get(
-                appointment__subject_identifier=subject_identifier,
-                survival_status=DEAD)
-        except ObjectDoesNotExist:
-            self.delete_action_item_if_new(maternal_death_cls)
-        else:
-            if obj.survival_status == DEAD:
-                self.action_cls_item_creator(
-                    subject_identifier=subject_identifier,
-                    action_cls=maternal_death_cls,
-                    action_type=MATERNAL_DEATH_REPORT_ACTION)
-
-    def get_maternal_offstudy_or_message(self):
-        obj = None
-        maternal_visit_cls = django_apps.get_model(
-            'td_maternal.maternalvisit')
-        maternal_offstudy_cls = django_apps.get_model(
-            'td_prn.maternaloffstudy')
-
-        subject_identifier = self.kwargs.get('subject_identifier')
-        try:
-            obj = maternal_visit_cls.objects.get(
-                appointment__subject_identifier=subject_identifier,
-                study_status=OFF_STUDY)
-        except ObjectDoesNotExist:
-            self.delete_action_item_if_new(maternal_offstudy_cls)
-        else:
-            self.action_cls_item_creator(
-                subject_identifier=subject_identifier,
-                action_cls=maternal_offstudy_cls,
-                action_type=MATERNALOFF_STUDY_ACTION)
-        return obj
-
-    def update_messages(self):
-        maternal_offstudy_cls = django_apps.get_model(
-            'td_prn.maternaloffstudy')
-
-        if self.get_action_item_obj(maternal_offstudy_cls):
-            form = maternal_offstudy_cls._meta.verbose_name
-            msg = mark_safe(
-                f'Please complete {form}, cannot add any new data.')
-            messages.add_message(self.request, messages.ERROR, msg)
-
-    def update_karabo_message(self):
-        karabo_screening_cls = django_apps.get_model(
-            'td_maternal.karabosubjectscreening')
-        karabo_consent_cls = django_apps.get_model(
-            'td_maternal.karabosubjectconsent')
-
-        try:
-            karabo_screening_obj = karabo_screening_cls.objects.get(
-                subject_identifier=self.kwargs.get('subject_identifier'))
-        except karabo_screening_cls.DoesNotExist:
-            if (not self.offstudy_obj and not self.is_outside_schedule and
-                    self.infant_age_valid):
-                form = karabo_screening_cls._meta.verbose_name
-                msg = mark_safe(
-                    'Participant is eligible to partake in the Karabo study.'
-                    f'Please complete {form}.')
-                messages.add_message(self.request, messages.WARNING, msg)
-        else:
-            try:
-                karabo_consent_cls.objects.get(
-                    subject_identifier=self.kwargs.get('subject_identifier'))
-            except karabo_consent_cls.DoesNotExist:
-                if karabo_screening_obj.is_eligible:
-                    form = karabo_consent_cls._meta.verbose_name
-                    msg = mark_safe(
-                        'Participant is eligible to partake in the Karabo study.'
-                        f'Please complete {form}.')
-                    messages.add_message(self.request, messages.WARNING, msg)
-            else:
-                msg = mark_safe(
-                    'Participant has been enrolled in the Karabo study.')
-                messages.add_message(self.request, messages.SUCCESS, msg)
-
-    @property
-    def is_outside_schedule(self):
-        subject_identifier = self.kwargs.get('subject_identifier')
-        infant_appointment_cls = django_apps.get_model(
-            'td_infant.appointment')
-        subject_identifier = subject_identifier + '-10'
-        latest_appointment = infant_appointment_cls.objects.filter(
-            timepoint__gt=180,
-            subject_identifier=subject_identifier).exclude(
-                appt_status=NEW_APPT)
-        return latest_appointment
-
-    @property
-    def offstudy_obj(self):
-        subject_identifier = self.kwargs.get('subject_identifier')
-        maternal_offstudy_cls = django_apps.get_model(
-            'td_prn.maternaloffstudy')
-        infant_offstudy_cls = django_apps.get_model(
-            'td_prn.infantoffstudy')
-        try:
-            return maternal_offstudy_cls.objects.get(
-                subject_identifier=subject_identifier)
-        except maternal_offstudy_cls.DoesNotExist:
-            try:
-                return infant_offstudy_cls.objects.get(
-                    subject_identifier=subject_identifier + '-10')
-            except infant_offstudy_cls.DoesNotExist:
-                return None
-
-    @property
-    def infant_age_valid(self):
-        if self.is_maternal_labour_del():
-            birth_datetime = self.is_maternal_labour_del().delivery_datetime
-            difference = relativedelta.relativedelta(get_utcnow(), birth_datetime)
-            months = 0
-            if difference.years > 0:
-                months = difference.years * 12
-            return (months + difference.months) < 21
-        return False
-
-    def action_cls_item_creator(
-            self, subject_identifier=None, action_cls=None, action_type=None):
-        action_cls = site_action_items.get(
-            action_cls.action_name)
-        action_item_model_cls = action_cls.action_item_model_cls()
-        try:
-            action_item_model_cls.objects.get(
-                subject_identifier=subject_identifier,
-                action_type__name=action_type)
-        except ObjectDoesNotExist:
-            action_cls(
-                subject_identifier=subject_identifier)
-
-    def delete_action_item_if_new(self, action_model_cls):
-        action_item_obj = self.get_action_item_obj(action_model_cls)
-        if action_item_obj:
-            action_item_obj.delete()
-
-    def get_action_item_obj(self, model_cls):
-        subject_identifier = self.kwargs.get('subject_identifier')
-        action_cls = site_action_items.get(
-            model_cls.action_name)
-        action_item_model_cls = action_cls.action_item_model_cls()
-
-        try:
-            action_item_obj = action_item_model_cls.objects.get(
-                subject_identifier=subject_identifier,
-                action_type__name=model_cls.action_name,
-                status=NEW)
-        except action_item_model_cls.DoesNotExist:
-            return None
-        return action_item_obj

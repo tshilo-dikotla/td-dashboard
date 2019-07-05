@@ -1,12 +1,9 @@
 from dateutil import relativedelta
 from django.apps import apps as django_apps
-from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
-from django.utils.safestring import mark_safe
 from django.views.generic.base import ContextMixin
 from edc_base.utils import get_utcnow
 from edc_base.view_mixins import EdcBaseViewMixin
-from edc_constants.constants import OFF_STUDY, DEAD, NEW
 from edc_dashboard.views import DashboardView as BaseDashboardView
 from edc_navbar import NavbarViewMixin
 from edc_registration.models import RegisteredSubject
@@ -22,6 +19,7 @@ from ....model_wrappers import (
     InfantCrfModelWrapper, InfantRequisitionModelWrapper, InfantOffstudyModelWrapper,
     InfantVisitModelWrapper, SubjectLocatorModelWrapper, ActionItemModelWrapper,
     InfantBirthModelWrapper, MaternalRegisteredSubjectModelWrapper)
+from ...view_mixin import DashboardViewMixin
 
 
 class InfantBirthValues(object):
@@ -132,7 +130,7 @@ class MaternalRegisteredSubjectCls(ContextMixin):
 
 
 class DashboardView(
-        EdcBaseViewMixin, SubjectDashboardViewMixin,
+        DashboardViewMixin, EdcBaseViewMixin, SubjectDashboardViewMixin,
         NavbarViewMixin, BaseDashboardView, InfantBirthButtonCls,
         MaternalRegisteredSubjectCls):
 
@@ -159,9 +157,19 @@ class DashboardView(
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        self.update_messages()
-        self.get_death_or_message()
-        self.get_infant_offstudy_or_message()
+
+        infant_offstudy_cls = django_apps.get_model('td_prn.infantoffstudy')
+        infant_visit_cls = django_apps.get_model('td_infant.infantvisit')
+        infant_death_cls = django_apps.get_model('td_prn.infantdeathreport')
+
+        self.update_messages(offstudy_cls=infant_offstudy_cls)
+        self.get_death_or_message(visit_cls=infant_visit_cls,
+                                  death_cls=infant_death_cls,
+                                  death_report_action=INFANT_DEATH_REPORT_ACTION)
+        self.get_offstudy_or_message(visit_cls=infant_visit_cls,
+                                     offstudy_cls=infant_offstudy_cls,
+                                     offstudy_action=INFANTOFF_STUDY_ACTION)
+        self.update_karabo_message()
         context = self.add_url_to_context(
             new_key='dashboard_url_name',
             existing_key=self.dashboard_url,
@@ -187,86 +195,3 @@ class DashboardView(
                 schedule_name=schedule.name)
         except ObjectDoesNotExist:
             return None
-
-    def get_death_or_message(self):
-        obj = None
-        infant_visit_cls = django_apps.get_model(
-            'td_infant.infantvisit')
-        infant_death_cls = django_apps.get_model(
-            'td_prn.infantdeathreport')
-        subject_identifier = self.kwargs.get('subject_identifier')
-
-        try:
-            obj = infant_visit_cls.objects.get(
-                appointment__subject_identifier=subject_identifier,
-                survival_status=DEAD)
-        except ObjectDoesNotExist:
-            self.delete_action_item_if_new(infant_death_cls)
-        else:
-            if obj.survival_status == DEAD:
-                self.action_cls_item_creator(
-                    subject_identifier=subject_identifier,
-                    action_cls=infant_death_cls,
-                    action_type=INFANT_DEATH_REPORT_ACTION)
-
-    def get_infant_offstudy_or_message(self):
-        obj = None
-        infant_visit_cls = django_apps.get_model(
-            'td_infant.infantvisit')
-        infant_offstudy_cls = django_apps.get_model(
-            'td_prn.infantoffstudy')
-        subject_identifier = self.kwargs.get('subject_identifier')
-        try:
-            obj = infant_visit_cls.objects.get(
-                appointment__subject_identifier=subject_identifier,
-                study_status=OFF_STUDY)
-        except ObjectDoesNotExist:
-            self.delete_action_item_if_new(infant_offstudy_cls)
-        else:
-            self.action_cls_item_creator(
-                subject_identifier=subject_identifier,
-                action_cls=infant_offstudy_cls,
-                action_type=INFANTOFF_STUDY_ACTION)
-        return obj
-
-    def action_cls_item_creator(
-            self, subject_identifier=None, action_cls=None, action_type=None):
-        action_cls = site_action_items.get(
-            action_cls.action_name)
-        action_item_model_cls = action_cls.action_item_model_cls()
-        try:
-            action_item_model_cls.objects.get(
-                subject_identifier=subject_identifier,
-                action_type__name=action_type)
-        except ObjectDoesNotExist:
-            action_cls(
-                subject_identifier=subject_identifier)
-
-    def get_action_item_obj(self, model_cls):
-        subject_identifier = self.kwargs.get('subject_identifier')
-        action_cls = site_action_items.get(model_cls.action_name)
-        action_item_model_cls = action_cls.action_item_model_cls()
-
-        try:
-            action_item_obj = action_item_model_cls.objects.get(
-                subject_identifier=subject_identifier,
-                action_type__name=model_cls.action_name,
-                status=NEW)
-        except action_item_model_cls.DoesNotExist:
-            return None
-        return action_item_obj
-
-    def delete_action_item_if_new(self, action_model_cls):
-        action_item_obj = self.get_action_item_obj(action_model_cls)
-        if action_item_obj:
-            action_item_obj.delete()
-
-    def update_messages(self):
-        infant_offstudy_cls = django_apps.get_model(
-            'td_prn.infantoffstudy')
-
-        if self.get_action_item_obj(infant_offstudy_cls):
-            form = infant_offstudy_cls._meta.verbose_name
-            msg = mark_safe(
-                f'Please complete {form}, cannot add any new data.')
-            messages.add_message(self.request, messages.ERROR, msg)

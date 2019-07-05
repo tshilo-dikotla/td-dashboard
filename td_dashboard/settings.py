@@ -17,14 +17,11 @@ import sys
 
 from django.core.management.color import color_style
 
-
 style = color_style()
-
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 APP_NAME = 'td_dashboard'
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -51,7 +48,6 @@ sys.stdout.write(style.SUCCESS('Reading config from {}\n'.format(CONFIG_PATH)))
 config = configparser.RawConfigParser()
 config.read(os.path.join(CONFIG_PATH))
 
-
 SITE_ID = 1
 
 # Application definition
@@ -65,8 +61,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_crypto_fields.apps.AppConfig',
+    'edc_lab.apps.AppConfig',
+    'edc_device.apps.AppConfig',
     'edc_protocol.apps.AppConfig',
-    'td_dashboard.apps.AppConfig'
+    'edc_timepoint.apps.AppConfig',
+    'edc_appointment.apps.AppConfig',
+    'edc_action_item.apps.AppConfig',
+    'td_maternal.apps.AppConfig',
+    'edc_visit_tracking.apps.AppConfig',
+    'td_dashboard.apps.AppConfig',
+
 ]
 
 MIDDLEWARE = [
@@ -103,7 +107,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'td_dashboard.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
@@ -113,7 +116,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -133,7 +135,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
@@ -146,7 +147,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
@@ -171,7 +171,6 @@ DASHBOARD_BASE_TEMPLATES = {
     'infant_subject_dashboard_template': 'td_dashboard/infant_subject/dashboard.html',
 }
 
-
 if 'test' in sys.argv:
 
     class DisableMigrations:
@@ -183,5 +182,7 @@ if 'test' in sys.argv:
             return None
 
     MIGRATION_MODULES = DisableMigrations()
-    PASSWORD_HASHERS = ('django.contrib.auth.hashers.MD5PasswordHasher', )
+    PASSWORD_HASHERS = ('django.contrib.auth.hashers.MD5PasswordHasher',)
     DEFAULT_FILE_STORAGE = 'inmemorystorage.InMemoryStorage'
+
+DEFAULT_STUDY_SITE = '40'
