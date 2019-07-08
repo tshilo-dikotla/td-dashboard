@@ -1,0 +1,15 @@
+{% if offschedule_datetime %}
+	{% if not offstudy_date %}
+		
+		<div class="panel-footer"><small>Subject was taken off the <b>{{ visit_schedule.verbose_name }}</b> schedule  
+		    on {{ offschedule_datetime|date:"SHORT_DATE_FORMAT" }}. To take off study complete <a href="{{ href }}">{{ verbose_name }}</a></small>
+		</div>
+	{% else %}
+		<div class="panel-footer"><small>Subject was taken offstudy. See <a href="{{ href }}">{{ verbose_name }}</a></small>
+		</div>
+	{% endif %}
+{% else %}
+<div class="panel-footer"><small>Subject was put on this schedule on {{ onschedule_datetime|date:"SHORT_DATE_FORMAT" }}. To take off study complete   
+    <a href="{{ href }}">{{ verbose_name }}</a>.</small>
+</div>
+{% endif %}

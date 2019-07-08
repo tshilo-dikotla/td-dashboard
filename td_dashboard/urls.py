@@ -7,7 +7,6 @@ from .views import (MaternalSubjectListboardView, MaternalSubjectDashboardView,
                     SubjectScreeningListboardView, InfantDashboardView,
                     InfantListBoardView)
 
-
 app_name = 'td_dashboard'
 
 subject_listboard_url_config = UrlConfig(
@@ -42,7 +41,7 @@ infant_subject_dashboard_url_config = UrlConfig(
     label='infant_subject_dashboard',
     identifier_label='subject_identifier',
     identifier_pattern=infant_subject_identifier)
-
+min
 
 urlpatterns = []
 urlpatterns += subject_listboard_url_config.listboard_urls

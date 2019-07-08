@@ -3,6 +3,12 @@
 {% load edc_prn_extras %}
 {% load action_item_extras %}
 
+{% block demographics %}   
+	
+    	{% include 'td_dashboard/infant_subject/dashboard/demographics.html' %}
+
+{% endblock demographics %}
+
 {% block prn_forms %}   
 
 	<div class="list-group list-group-default">
@@ -16,3 +22,7 @@
     
 	</div>
 {% endblock prn_forms %}
+
+{% block consents %}
+
+{% endblock consents %}

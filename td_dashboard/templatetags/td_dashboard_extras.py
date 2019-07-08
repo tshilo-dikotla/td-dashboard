@@ -1,5 +1,10 @@
+from urllib.parse import urlencode, unquote
+
 from django import template
 from django.conf import settings
+from django.utils.safestring import mark_safe
+
+from edc_visit_schedule.models import SubjectScheduleHistory
 
 register = template.Library()
 
@@ -9,12 +14,14 @@ def karabo_screening_button(model_wrapper):
     title = ['Edit subject\' Karabo screening form.']
     show_karabo_forms = (not model_wrapper.is_outside_schedule
                          and not model_wrapper.offstudy_obj)
+
     return dict(
         subject_identifier=model_wrapper.object.subject_identifier,
         infant_birth=model_wrapper.infant_birth_obj,
         add_karabo_subject_screening_href=model_wrapper.karabo_subject_screening.href,
         karabo_subject_screening_obj=model_wrapper.karabo_subject_screening_obj,
         show_karabo_forms=show_karabo_forms,
+        infant_age_valid=model_wrapper.infant_age_valid,
         title=' '.join(title))
 
 
@@ -29,6 +36,7 @@ def karabo_subject_consent_button(model_wrapper):
         karabo_subject_consent_obj=model_wrapper.karabo_subject_consent_obj,
         is_eligible=model_wrapper.is_karabo_eligible,
         show_karabo_forms=show_karabo_forms,
+        infant_age_valid=model_wrapper.infant_age_valid,
         title=' '.join(title))
 
 
@@ -146,6 +154,15 @@ def maternal_labour_del_button(model_wrapper):
         title=' '.join(title),)
 
 
+@register.inclusion_tag('td_dashboard/buttons/maternal_contact_button.html')
+def maternal_contact_button(model_wrapper):
+    title = ['subject maternal contact.']
+    return dict(
+        subject_identifier=model_wrapper.object.subject_identifier,
+        add_maternal_contact_href=model_wrapper.maternal_contact.href,
+        title=' '.join(title),)
+
+
 @register.inclusion_tag('td_dashboard/buttons/dashboard_button.html')
 def dashboard_button(model_wrapper):
     subject_dashboard_url = settings.DASHBOARD_URL_NAMES.get(
@@ -202,3 +219,59 @@ def infant_offstudy_button(model_wrapper):
         add_infant_offstudy_href=model_wrapper.infant_offstudy.href,
         infant_offstudy_model_obj=model_wrapper.infant_offstudy_model_obj,
         title=' '.join(title))
+
+
+@register.inclusion_tag('td_dashboard/subject_schedule_footer_row.html')
+def subject_schedule_footer_row(subject_identifier, visit_schedule, schedule,
+                                subject_dashboard_url):
+
+    context = {}
+    try:
+        history_obj = SubjectScheduleHistory.objects.get(
+            visit_schedule_name=visit_schedule.name,
+            schedule_name=schedule.name,
+            subject_identifier=subject_identifier,
+            offschedule_datetime__isnull=False)
+    except SubjectScheduleHistory.DoesNotExist:
+        onschedule_model_obj = schedule.onschedule_model_cls.objects.get(
+            subject_identifier=subject_identifier,
+            schedule_name=schedule.name,)
+        options = dict(subject_identifier=subject_identifier)
+        query = unquote(urlencode(options))
+        href = (f'{visit_schedule.offstudy_model_cls().get_absolute_url()}?next='
+                f'{subject_dashboard_url},subject_identifier')
+        href = '&'.join([href, query])
+        context = dict(
+            offschedule_datetime=None,
+            onschedule_datetime=onschedule_model_obj.onschedule_datetime,
+            href=mark_safe(href))
+    else:
+        onschedule_model_obj = schedule.onschedule_model_cls.objects.get(
+            subject_identifier=subject_identifier,
+            schedule_name=schedule.name)
+        options = dict(subject_identifier=subject_identifier)
+        query = unquote(urlencode(options))
+        offstudy_model_obj = None
+        try:
+            offstudy_model_obj = visit_schedule.offstudy_model_cls.objects.get(
+                subject_identifier=subject_identifier)
+        except visit_schedule.offstudy_model_cls.DoesNotExist:
+            href = (f'{visit_schedule.offstudy_model_cls().get_absolute_url()}'
+                    f'?next={subject_dashboard_url},subject_identifier')
+        else:
+            href = (f'{offstudy_model_obj.get_absolute_url()}?next='
+                    f'{subject_dashboard_url},subject_identifier')
+
+        href = '&'.join([href, query])
+
+        context = dict(
+            offschedule_datetime=history_obj.offschedule_datetime,
+            onschedule_datetime=onschedule_model_obj.onschedule_datetime,
+            href=mark_safe(href))
+        if offstudy_model_obj:
+            context.update(offstudy_date=offstudy_model_obj.offstudy_date)
+    context.update(
+        visit_schedule=visit_schedule,
+        schedule=schedule,
+        verbose_name=visit_schedule.offstudy_model_cls._meta.verbose_name)
+    return context
