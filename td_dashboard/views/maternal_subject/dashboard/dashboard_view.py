@@ -1,21 +1,22 @@
-from td_maternal.action_items import MATERNAL_LOCATOR_ACTION
-from td_maternal.helper_classes import MaternalStatusHelper
+from operator import getitem
 
 from django.apps import apps as django_apps
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import ValidationError
 from django.utils.safestring import mark_safe
+from edc_action_item.site_action_items import site_action_items
 from edc_base.utils import get_utcnow
 from edc_base.view_mixins import EdcBaseViewMixin
 from edc_constants.constants import OFF_STUDY, DEAD, NEW
 from edc_dashboard.views import DashboardView as BaseDashboardView
 from edc_navbar import NavbarViewMixin
 from edc_registration.models import RegisteredSubject
-
-from edc_action_item.site_action_items import site_action_items
 from edc_subject_dashboard.view_mixins import SubjectDashboardViewMixin
 from edc_visit_schedule.site_visit_schedules import site_visit_schedules
+
+from td_maternal.action_items import MATERNAL_LOCATOR_ACTION
+from td_maternal.helper_classes import MaternalStatusHelper
 from td_prn.action_items import MATERNALOFF_STUDY_ACTION
 from td_prn.action_items import MATERNAL_DEATH_REPORT_ACTION
 
@@ -169,7 +170,8 @@ class DashboardView(
                        hiv_status=self.hiv_status,
                        enrollment_hiv_status=self.enrollment_hiv_status,
                        rando_status=self.rando_status,
-                       maternal_ga=self.maternal_ga)
+                       maternal_ga=self.maternal_ga,
+                       open_action_items=self.open_action_items)
         context = self.add_url_to_context(
             new_key='dashboard_url_name',
             existing_key=self.dashboard_url,
@@ -197,7 +199,6 @@ class DashboardView(
             onschedule_models=self.onschedule_models,
             current_schedule=self.current_schedule,
             current_visit_schedule=self.current_visit_schedule)
-        return context
 
         return context
 
