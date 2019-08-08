@@ -45,10 +45,13 @@
 	        	{% consent_button result %}
 	        {% else %}
 	        {% specimen_consent_button result %}
-	        	{% dashboard_button result %}
-	        	{% if result.antenatal_enrollment%}
+	        {% dashboard_button result %}
+	        
+	        {% if result.antenatal_enrollment%}
+	        	{% if not result.antenatal_enrollment.is_eligible %}
 	        		{% antenatal_enrol_eligibility_button result %}
 	        	{% endif %}
+	        {% endif %}
 	        {% endif %}
 	     {% endif %}
     {% endif %}
