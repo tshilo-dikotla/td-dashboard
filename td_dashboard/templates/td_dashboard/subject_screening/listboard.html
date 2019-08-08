@@ -48,8 +48,6 @@
 	        
 	        {% if result.antenatal_enrollment%}
 	        	{% if result.antenatal_enrollment.is_eligible %}
-	        		{% dashboard_button result %}
-	        	{%else%}
 	        		{% antenatal_enrol_eligibility_button result %}
 	        	{% endif %}
 	        {% endif %}
