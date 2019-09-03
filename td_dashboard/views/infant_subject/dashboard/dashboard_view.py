@@ -2,14 +2,14 @@ from dateutil import relativedelta
 from django.apps import apps as django_apps
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.views.generic.base import ContextMixin
+from edc_action_item.site_action_items import site_action_items
 from edc_base.utils import get_utcnow
 from edc_base.view_mixins import EdcBaseViewMixin
 from edc_dashboard.views import DashboardView as BaseDashboardView
-from edc_navbar import NavbarViewMixin
 from edc_registration.models import RegisteredSubject
-
-from edc_action_item.site_action_items import site_action_items
 from edc_subject_dashboard.view_mixins import SubjectDashboardViewMixin
+
+from edc_navbar import NavbarViewMixin
 from edc_visit_schedule.site_visit_schedules import site_visit_schedules
 from td_prn.action_items import INFANTOFF_STUDY_ACTION
 from td_prn.action_items import INFANT_DEATH_REPORT_ACTION
@@ -195,3 +195,10 @@ class DashboardView(
                 schedule_name=schedule.name)
         except ObjectDoesNotExist:
             return None
+
+    def get_subject_locator_or_message(self):
+        """
+        Overridden to stop system from generating subject locator
+        action items for infant.
+        """
+        pass
