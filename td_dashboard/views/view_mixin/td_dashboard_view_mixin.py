@@ -3,10 +3,10 @@ from django.apps import apps as django_apps
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.safestring import mark_safe
+from edc_action_item.site_action_items import site_action_items
 from edc_base.utils import get_utcnow
 from edc_constants.constants import OFF_STUDY, DEAD, NEW
 
-from edc_action_item.site_action_items import site_action_items
 from edc_appointment.constants import NEW_APPT
 
 
@@ -41,13 +41,11 @@ class DashboardViewMixin:
     def get_offstudy_or_message(self, visit_cls=None, offstudy_cls=None,
                                 offstudy_action=None):
         obj = None
-
         subject_identifier = self.kwargs.get('subject_identifier')
-        try:
-            obj = visit_cls.objects.get(
-                appointment__subject_identifier=subject_identifier,
-                study_status=OFF_STUDY)
-        except ObjectDoesNotExist:
+        obj = visit_cls.objects.filter(
+            appointment__subject_identifier=subject_identifier,
+            study_status=OFF_STUDY).order_by('report_datetime').last()
+        if not obj:
             self.delete_action_item_if_new(offstudy_cls)
         else:
             self.action_cls_item_creator(
@@ -153,7 +151,8 @@ class DashboardViewMixin:
     def infant_age_valid(self):
         if self.maternal_labour_del():
             birth_datetime = self.maternal_labour_del().delivery_datetime
-            difference = relativedelta.relativedelta(get_utcnow(), birth_datetime)
+            difference = relativedelta.relativedelta(
+                get_utcnow(), birth_datetime)
             months = 0
             if difference.years > 0:
                 months = difference.years * 12
