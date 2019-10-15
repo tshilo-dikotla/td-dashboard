@@ -14,6 +14,7 @@ from .antenatal_enrollment_wrapper_mixin import AntenatalEnrollmentModelWrapperM
 from .karabo_subject_consent_mixin import KaraboSubjectConsentModelWrapperMixin
 from .karabo_subject_screening_mixin import KaraboScreeningModelWrapperMixin
 from .maternal_contact_model_wrapper_mixin import MaternalContactModelWrapperMixin
+from .maternal_death_report_wrapper_mixin import MaternalDeathReportModelWrapperMixin
 from .maternal_labour_del_wrapper_mixin import MaternalLabourDelModelWrapperMixin
 from .maternal_locator_wrapper_mixin import MaternalLocatorModelWrapperMixin
 from .maternal_offstudy_wrapper_mixin import MaternalOffstudyModelWrapperMixin
@@ -34,6 +35,7 @@ class SubjectScreeningModelWrapper(
         SpecimenConsentModelWrapperMixin,
         TDConsentVersionModelWrapperMixin,
         MaternalContactModelWrapperMixin,
+        MaternalDeathReportModelWrapperMixin,
         ModelWrapper):
 
     consent_model_wrapper_cls = SubjectConsentModelWrapper
@@ -108,10 +110,27 @@ class SubjectScreeningModelWrapper(
                 return None
 
     @property
+    def death_obj(self):
+        maternal_death_cls = django_apps.get_model(
+            'td_prn.maternaldeathreport')
+        infant_death_cls = django_apps.get_model(
+            'td_prn.infantdeathreport')
+        try:
+            return maternal_death_cls.objects.get(
+                subject_identifier=self.object.subject_identifier)
+        except maternal_death_cls.DoesNotExist:
+            try:
+                return infant_death_cls.objects.get(
+                    subject_identifier=self.object.subject_identifier + '-10')
+            except infant_death_cls.DoesNotExist:
+                return None
+
+    @property
     def infant_age_valid(self):
         if self.maternal_labour_del_model_obj:
             birth_datetime = self.maternal_labour_del_model_obj.delivery_datetime
-            difference = relativedelta.relativedelta(get_utcnow(), birth_datetime)
+            difference = relativedelta.relativedelta(
+                get_utcnow(), birth_datetime)
             months = 0
             if difference.years > 0:
                 months = difference.years * 12

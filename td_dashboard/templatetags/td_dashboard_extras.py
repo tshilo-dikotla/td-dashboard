@@ -211,6 +211,16 @@ def maternal_offstudy_button(model_wrapper):
         title=' '.join(title))
 
 
+@register.inclusion_tag('td_dashboard/buttons/maternal_death_button.html')
+def maternal_death_button(model_wrapper):
+    title = ['Edit Death Report.']
+    return dict(
+        subject_identifier=model_wrapper.object.subject_identifier,
+        add_maternal_death_report_href=model_wrapper.maternal_death_report.href,
+        maternal_death_report_model_obj=model_wrapper.maternal_death_report_model_obj,
+        title=' '.join(title))
+
+
 @register.inclusion_tag('td_dashboard/buttons/infant_offstudy_button.html')
 def infant_offstudy_button(model_wrapper):
     title = ['Edit Offstudy.']
@@ -218,6 +228,16 @@ def infant_offstudy_button(model_wrapper):
         subject_identifier=model_wrapper.subject_identifier,
         add_infant_offstudy_href=model_wrapper.infant_offstudy.href,
         infant_offstudy_model_obj=model_wrapper.infant_offstudy_model_obj,
+        title=' '.join(title))
+
+
+@register.inclusion_tag('td_dashboard/buttons/infant_death_button.html')
+def infant_death_button(model_wrapper):
+    title = ['Edit Death Report']
+    return dict(
+        subject_identifier=model_wrapper.subject_identifier,
+        add_infant_death_report_href=model_wrapper.infant_death_report.href,
+        infant_death_report_model_obj=model_wrapper.infant_death_report_model_obj,
         title=' '.join(title))
 
 
