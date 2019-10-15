@@ -11,6 +11,7 @@ from edc_subject_dashboard.view_mixins import SubjectDashboardViewMixin
 
 from edc_navbar import NavbarViewMixin
 from edc_visit_schedule.site_visit_schedules import site_visit_schedules
+from td_dashboard.model_wrappers.infant_death_report_model_wrapper import InfantDeathReportModelWrapper
 from td_prn.action_items import INFANTOFF_STUDY_ACTION
 from td_prn.action_items import INFANT_DEATH_REPORT_ACTION
 
@@ -76,6 +77,27 @@ class InfantBirthValues(object):
         options = dict(
             subject_identifier=self.subject_identifier)
         return options
+
+    @property
+    def infant_death_report_cls(self):
+        return django_apps.get_model('td_prn.infantdeathreport')
+
+    @property
+    def infant_death_report_model_obj(self):
+        """Returns a infant death report model instance or None.
+        """
+        try:
+            return self.infant_death_report_cls.objects.get(**self.infant_offstudy_options)
+        except ObjectDoesNotExist:
+            return None
+
+    @property
+    def infant_death_report(self):
+        """Returns a wrapped saved or unsaved infant death report.
+        """
+        model_obj = self.infant_death_report_model_obj or self.infant_death_report_cls(
+            **self.infant_death_report_options)
+        return InfantDeathReportModelWrapper(model_obj=model_obj)
 
     @property
     def infant_age(self):
