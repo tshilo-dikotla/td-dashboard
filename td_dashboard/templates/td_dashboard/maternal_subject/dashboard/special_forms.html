@@ -1,52 +1,37 @@
 {% load td_dashboard_extras %}
 <table class="table table-condensed">
-    <thead></thead>
-    <tbody>
-    <tr>
-        <td>
-			{% consent_version_button subject_screening %}
-		</td>
-		</tr>
-        <tr>
-        <td>
-			{% antenatal_enrollment_button subject_screening %}
-		</td>
+	<thead></thead>
+	<tbody>
+		<tr>
+			<td>{% consent_version_button subject_screening %}</td>
 		</tr>
 		<tr>
-		<td>
-			{% antenatal_visit_membership_button subject_screening %}
-		</td>
+			<td>{% antenatal_enrollment_button subject_screening %}</td>
 		</tr>
 		<tr>
-		<td>
-			{% maternal_labour_del_button subject_screening %}
-		</td>
-      	</tr>
-      	<tr>
-		<td>
-			{% maternal_contact_button subject_screening %}
-		</td>
-      	</tr>
-      	<tr>
-		<td>
-			{% maternal_locator_button subject_screening %}
-		</td>
-      	</tr>
-      	<tr>
-        <td>
-			{% karabo_eligibility_button subject_screening %}
-		    {% karabo_screening_button subject_screening %}
-		</td>
+			<td>{% antenatal_visit_membership_button subject_screening %}</td>
 		</tr>
 		<tr>
-        <td>
-			{% karabo_subject_consent_button subject_screening %}
-		</td>
+			<td>{% maternal_labour_del_button subject_screening %}</td>
 		</tr>
 		<tr>
-		<td>
-			{% maternal_offstudy_button subject_screening %}
-		</td>
-      	</tr>
-    </tbody>
+			<td>{% maternal_contact_button subject_screening %}</td>
+		</tr>
+		<tr>
+			<td>{% maternal_locator_button subject_screening %}</td>
+		</tr>
+		<tr>
+			<td>{% karabo_eligibility_button subject_screening %} 
+				{% karabo_screening_button subject_screening %}</td>
+		</tr>
+		<tr>
+			<td>{% karabo_subject_consent_button subject_screening %}</td>
+		</tr>
+		<tr>
+			<td>{% maternal_offstudy_button subject_screening %}</td>
+		</tr>
+		<tr>
+			<td>{% maternal_death_button subject_screening %}</td>
+		</tr>
+	</tbody>
 </table>
