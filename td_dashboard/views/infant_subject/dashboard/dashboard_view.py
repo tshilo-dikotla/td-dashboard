@@ -96,7 +96,7 @@ class InfantBirthValues(object):
         """Returns a wrapped saved or unsaved infant death report.
         """
         model_obj = self.infant_death_report_model_obj or self.infant_death_report_cls(
-            **self.infant_death_report_options)
+            **self.infant_offstudy_options)
         return InfantDeathReportModelWrapper(model_obj=model_obj)
 
     @property
