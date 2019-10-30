@@ -6,10 +6,9 @@ from edc_action_item.site_action_items import site_action_items
 from edc_base.utils import get_utcnow
 from edc_base.view_mixins import EdcBaseViewMixin
 from edc_dashboard.views import DashboardView as BaseDashboardView
+from edc_navbar import NavbarViewMixin
 from edc_registration.models import RegisteredSubject
 from edc_subject_dashboard.view_mixins import SubjectDashboardViewMixin
-
-from edc_navbar import NavbarViewMixin
 from edc_visit_schedule.site_visit_schedules import site_visit_schedules
 from td_dashboard.model_wrappers.infant_death_report_model_wrapper import InfantDeathReportModelWrapper
 from td_prn.action_items import INFANTOFF_STUDY_ACTION
@@ -202,10 +201,11 @@ class DashboardView(
     def set_current_schedule(self, onschedule_model_obj=None,
                              schedule=None, visit_schedule=None,
                              is_onschedule=True):
-        if onschedule_model_obj and is_onschedule:
-            self.current_schedule = schedule
-            self.current_visit_schedule = visit_schedule
-            self.current_onschedule_model = onschedule_model_obj
+        if onschedule_model_obj:
+            if is_onschedule:
+                self.current_schedule = schedule
+                self.current_visit_schedule = visit_schedule
+                self.current_onschedule_model = onschedule_model_obj
             self.onschedule_models.append(onschedule_model_obj)
             self.visit_schedules.update(
                 {visit_schedule.name: visit_schedule})
