@@ -4,10 +4,9 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.safestring import mark_safe
 from edc_action_item.site_action_items import site_action_items
+from edc_appointment.constants import NEW_APPT
 from edc_base.utils import get_utcnow
 from edc_constants.constants import OFF_STUDY, DEAD, NEW
-
-from edc_appointment.constants import NEW_APPT
 
 
 class DashboardViewMixin:
@@ -40,7 +39,7 @@ class DashboardViewMixin:
 
     def get_offstudy_or_message(self, visit_cls=None, offstudy_cls=None,
                                 offstudy_action=None):
-        obj = None
+
         subject_identifier = self.kwargs.get('subject_identifier')
         obj = visit_cls.objects.filter(
             appointment__subject_identifier=subject_identifier,
@@ -59,7 +58,7 @@ class DashboardViewMixin:
         if self.get_action_item_obj(offstudy_cls):
             form = offstudy_cls._meta.verbose_name
             msg = mark_safe(
-                f'Please complete {form}, cannot add any new data.')
+                f'Please complete {form}.')
             messages.add_message(self.request, messages.ERROR, msg)
 
     def update_karabo_message(self):
