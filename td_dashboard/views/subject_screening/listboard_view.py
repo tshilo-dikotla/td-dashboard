@@ -1,13 +1,14 @@
 import re
 
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.utils.decorators import method_decorator
-
 from edc_base.view_mixins import EdcBaseViewMixin
+from edc_navbar import NavbarViewMixin
+
 from edc_dashboard.view_mixins import ListboardFilterViewMixin, SearchFormViewMixin
 from edc_dashboard.views import ListboardView
-from edc_navbar import NavbarViewMixin
 
 from ...model_wrappers import SubjectScreeningModelWrapper
 from .filters import ListboardViewFilters
@@ -38,6 +39,11 @@ class ListBoardView(NavbarViewMixin, EdcBaseViewMixin,
         context = super().get_context_data(**kwargs)
         context.update(
             subject_screening_add_url=self.model_cls().get_absolute_url())
+        messages.add_message(
+            self.request, messages.ERROR,
+            ('This EDC is STRICTLY for collecting data for Offstudy '
+             'participants. Do not use this system for any other data '
+             'collection!'))
         return context
 
     def get_queryset_filter_options(self, request, *args, **kwargs):
