@@ -4,12 +4,22 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.safestring import mark_safe
 from edc_action_item.site_action_items import site_action_items
-from edc_appointment.constants import NEW_APPT
 from edc_base.utils import get_utcnow
 from edc_constants.constants import OFF_STUDY, DEAD, NEW
 
+from edc_appointment.constants import NEW_APPT
+
 
 class DashboardViewMixin:
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        messages.add_message(
+            self.request, messages.ERROR,
+            ('This EDC is STRICTLY for collecting data for Offstudy '
+             'participants. Do not use this system for any other data '
+             'collection!'))
+        return context
 
     def get_onschedule_model_obj(self, schedule):
         try:
