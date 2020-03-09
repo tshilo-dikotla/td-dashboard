@@ -1,10 +1,12 @@
 import re
 
+from django.contrib import messages
 from django.db.models import Q
 from edc_base.view_mixins import EdcBaseViewMixin
+from edc_navbar import NavbarViewMixin
+
 from edc_dashboard.view_mixins import ListboardFilterViewMixin, SearchFormViewMixin
 from edc_dashboard.views import ListboardView
-from edc_navbar import NavbarViewMixin
 
 from ....model_wrappers import SubjectConsentModelWrapper
 
@@ -23,6 +25,15 @@ class ListboardView(EdcBaseViewMixin, NavbarViewMixin,
     navbar_name = 'td_dashboard'
     navbar_selected_item = 'consented_subject'
     search_form_url = 'subject_listboard_url'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        messages.add_message(
+            self.request, messages.ERROR,
+            ('This EDC is STRICTLY for collecting data for Offstudy '
+             'participants. Do not use this system for any other data '
+             'collection!'))
+        return context
 
     def get_queryset_filter_options(self, request, *args, **kwargs):
         options = super().get_queryset_filter_options(request, *args, **kwargs)
