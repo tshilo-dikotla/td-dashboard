@@ -1,24 +1,23 @@
-from operator import getitem
-
-from django.apps import apps as django_apps
-from django.core.exceptions import ObjectDoesNotExist
-from django.core.exceptions import ValidationError
-from django.utils.safestring import mark_safe
-from edc_action_item.site_action_items import site_action_items
-from edc_action_item.site_action_items import site_action_items
-from edc_appointment.constants import NEW_APPT
-from edc_base.utils import get_utcnow
-from edc_base.view_mixins import EdcBaseViewMixin
-from edc_dashboard.views import DashboardView as BaseDashboardView
-from edc_navbar import NavbarViewMixin
-from edc_registration.models import RegisteredSubject
-from edc_subject_dashboard.view_mixins import SubjectDashboardViewMixin
-from edc_visit_schedule.site_visit_schedules import site_visit_schedules
-
 from td_maternal.action_items import MATERNAL_LOCATOR_ACTION
 from td_maternal.helper_classes import MaternalStatusHelper
 from td_prn.action_items import MATERNALOFF_STUDY_ACTION
 from td_prn.action_items import MATERNAL_DEATH_REPORT_ACTION
+
+from django.apps import apps as django_apps
+from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ValidationError
+from django.utils.safestring import mark_safe
+from edc_base.utils import get_utcnow
+from edc_base.view_mixins import EdcBaseViewMixin
+from edc_constants.constants import YES
+from edc_navbar import NavbarViewMixin
+from edc_registration.models import RegisteredSubject
+
+from edc_action_item.site_action_items import site_action_items
+from edc_appointment.constants import NEW_APPT
+from edc_dashboard.views import DashboardView as BaseDashboardView
+from edc_subject_dashboard.view_mixins import SubjectDashboardViewMixin
 
 from ....model_wrappers import (
     AppointmentModelWrapper, SubjectConsentModelWrapper,
@@ -183,6 +182,7 @@ class DashboardView(
                        rando_status=self.rando_status,
                        maternal_ga=self.maternal_ga,
                        open_action_items=self.open_action_items)
+        self.get_covid_object_or_message()
         context = self.add_url_to_context(
             new_key='dashboard_url_name',
             existing_key=self.dashboard_url,
@@ -227,3 +227,24 @@ class DashboardView(
                 action_cls(
                     subject_identifier=subject_identifier)
         return obj
+
+    def get_covid_object_or_message(self):
+        subject_identifier = self.kwargs.get('subject_identifier')
+        maternal_visit_cls = django_apps.get_model('td_maternal.maternalvisit')
+        maternal_covid_screening_cls = django_apps.get_model(
+            'td_maternal.maternalcovidscreening')
+
+        maternal_visits = maternal_visit_cls.objects.filter(
+            appointment__subject_identifier=subject_identifier)
+
+        for visit in maternal_visits:
+            if visit.covid_visit == YES:
+                try:
+                    maternal_covid_screening_cls.objects.get(
+                        maternal_visit=visit)
+                except maternal_covid_screening_cls.DoesNotExist:
+                    form = maternal_covid_screening_cls._meta.verbose_name
+                    msg = mark_safe(
+                        f'Please complete {form} for visit {visit.visit_code} as '
+                        'it is indicated as a covid visit.')
+                    messages.add_message(self.request, messages.WARNING, msg)
