@@ -1,18 +1,22 @@
-from dateutil import relativedelta
-from django.apps import apps as django_apps
-from django.core.exceptions import ObjectDoesNotExist, ValidationError
-from django.views.generic.base import ContextMixin
-from edc_action_item.site_action_items import site_action_items
-from edc_base.utils import get_utcnow
-from edc_base.view_mixins import EdcBaseViewMixin
-from edc_dashboard.views import DashboardView as BaseDashboardView
-from edc_navbar import NavbarViewMixin
-from edc_registration.models import RegisteredSubject
-from edc_subject_dashboard.view_mixins import SubjectDashboardViewMixin
-from edc_visit_schedule.site_visit_schedules import site_visit_schedules
 from td_dashboard.model_wrappers.infant_death_report_model_wrapper import InfantDeathReportModelWrapper
 from td_prn.action_items import INFANTOFF_STUDY_ACTION
 from td_prn.action_items import INFANT_DEATH_REPORT_ACTION
+
+from dateutil import relativedelta
+from django.apps import apps as django_apps
+from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.utils.safestring import mark_safe
+from django.views.generic.base import ContextMixin
+from edc_base.utils import get_utcnow
+from edc_base.view_mixins import EdcBaseViewMixin
+from edc_constants.constants import YES
+from edc_navbar import NavbarViewMixin
+from edc_registration.models import RegisteredSubject
+
+from edc_action_item.site_action_items import site_action_items
+from edc_dashboard.views import DashboardView as BaseDashboardView
+from edc_subject_dashboard.view_mixins import SubjectDashboardViewMixin
 
 from ....model_wrappers import (
     InfantAppointmentModelWrapper, InfantDummyConsentModelWrapper,
@@ -191,6 +195,7 @@ class DashboardView(
                                      offstudy_cls=infant_offstudy_cls,
                                      offstudy_action=INFANTOFF_STUDY_ACTION)
         self.update_karabo_message()
+        self.get_covid_object_or_message()
         context = self.add_url_to_context(
             new_key='dashboard_url_name',
             existing_key=self.dashboard_url,
@@ -223,3 +228,25 @@ class DashboardView(
         action items for infant.
         """
         pass
+
+    def get_covid_object_or_message(self):
+        subject_identifier = self.kwargs.get('subject_identifier')
+        infant_visit_cls = django_apps.get_model('td_infant.infantvisit')
+        infant_covid_screening_cls = django_apps.get_model(
+            'td_infant.infantcovidscreening')
+
+        infant_visits = infant_visit_cls.objects.filter(
+            appointment__subject_identifier=subject_identifier)
+
+        for visit in infant_visits:
+            if visit.covid_visit == YES:
+                try:
+                    infant_covid_screening_cls.objects.get(
+                        infant_visit=visit)
+                except infant_covid_screening_cls.DoesNotExist:
+                    form = infant_covid_screening_cls._meta.verbose_name
+                    msg = mark_safe(
+                        f'Please complete {form} for visit {visit.visit_code} as '
+                        'it is indicated as a covid visit.')
+                    messages.add_message(self.request, messages.WARNING, msg)
+
