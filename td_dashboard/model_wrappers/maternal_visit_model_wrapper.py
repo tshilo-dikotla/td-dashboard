@@ -1,10 +1,4 @@
-from django.apps import apps as django_apps
 from django.conf import settings
-from django.contrib import messages
-from django.core.exceptions import ObjectDoesNotExist
-from django.utils.safestring import mark_safe
-from edc_constants.constants import YES
-
 from edc_subject_dashboard import SubjectVisitModelWrapper as BaseSubjectVisitModelWrapper
 
 
