@@ -51,7 +51,6 @@ class DashboardView(
     maternal_links = False
     infant_dashboard_include_value = "td_dashboard/maternal_subject/dashboard/infant_dashboard_links.html"
     infant_subject_dashboard_url = 'infant_subject_dashboard_url'
-    data_action_item_template = "td_dashboard/maternal_subject/dashboard/data_manager.html"
 
     @property
     def subject_screening(self):
