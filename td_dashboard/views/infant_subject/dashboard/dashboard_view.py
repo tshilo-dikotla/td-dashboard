@@ -179,7 +179,6 @@ class DashboardView(
     maternal_links = True
     special_forms_include_value = "td_dashboard/infant_subject/dashboard/special_forms.html"
     maternal_dashboard_include_value = "td_dashboard/maternal_subject/dashboard/maternal_dashboard_links.html"
-    data_action_item_template = "td_dashboard/infant_subject/dashboard/data_manager.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
