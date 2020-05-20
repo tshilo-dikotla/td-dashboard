@@ -4,6 +4,7 @@ from td_prn.action_items import INFANT_DEATH_REPORT_ACTION
 
 from dateutil import relativedelta
 from django.apps import apps as django_apps
+from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.utils.safestring import mark_safe
@@ -16,6 +17,7 @@ from edc_registration.models import RegisteredSubject
 
 from edc_action_item.site_action_items import site_action_items
 from edc_dashboard.views import DashboardView as BaseDashboardView
+from edc_data_manager.model_wrappers import DataActionItemModelWrapper
 from edc_subject_dashboard.view_mixins import SubjectDashboardViewMixin
 
 from ....model_wrappers import (
@@ -180,6 +182,18 @@ class DashboardView(
     special_forms_include_value = "td_dashboard/infant_subject/dashboard/special_forms.html"
     maternal_dashboard_include_value = "td_dashboard/maternal_subject/dashboard/maternal_dashboard_links.html"
     data_action_item_template = "td_dashboard/infant_subject/dashboard/data_manager.html"
+
+    @property
+    def data_action_item(self):
+        """Returns a wrapped saved or unsaved consent version.
+        """
+        model_cls = django_apps.get_model('edc_data_manager.dataactionitem')
+        model_obj = model_cls(subject_identifier=self.subject_identifier)
+        next_url = settings.DASHBOARD_URL_NAMES.get(
+            'infant_subject_dashboard_url')
+        model_wrapper = DataActionItemModelWrapper(model_obj=model_obj,
+                                                   next_url_name=next_url)
+        return model_wrapper
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
