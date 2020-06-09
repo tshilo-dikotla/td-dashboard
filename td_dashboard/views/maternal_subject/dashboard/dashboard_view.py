@@ -17,6 +17,7 @@ from edc_registration.models import RegisteredSubject
 from edc_action_item.site_action_items import site_action_items
 from edc_appointment.constants import NEW_APPT
 from edc_dashboard.views import DashboardView as BaseDashboardView
+from edc_odk.view_mixins import DocCopiesCheckViewMixin
 from edc_subject_dashboard.view_mixins import SubjectDashboardViewMixin
 
 from ....model_wrappers import (
@@ -28,8 +29,8 @@ from ...view_mixin import DashboardViewMixin
 
 
 class DashboardView(
-        DashboardViewMixin, EdcBaseViewMixin, SubjectDashboardViewMixin,
-        NavbarViewMixin, BaseDashboardView):
+        DashboardViewMixin, DocCopiesCheckViewMixin, EdcBaseViewMixin,
+        SubjectDashboardViewMixin, NavbarViewMixin, BaseDashboardView):
 
     dashboard_url = 'subject_dashboard_url'
     dashboard_template = 'subject_dashboard_template'
