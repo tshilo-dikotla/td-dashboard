@@ -15,6 +15,7 @@ from edc_navbar import NavbarViewMixin
 from edc_registration.models import RegisteredSubject
 
 from edc_action_item.site_action_items import site_action_items
+from edc_appointment.constants import IN_PROGRESS_APPT
 from edc_appointment.constants import NEW_APPT
 from edc_dashboard.views import DashboardView as BaseDashboardView
 from edc_subject_dashboard.view_mixins import SubjectDashboardViewMixin
@@ -236,7 +237,8 @@ class DashboardView(
             'td_maternal.maternalcovidscreening')
 
         maternal_visits = maternal_visit_cls.objects.filter(
-            appointment__subject_identifier=subject_identifier)
+            appointment__subject_identifier=subject_identifier,
+            appointment__appt_status=IN_PROGRESS_APPT)
 
         for visit in maternal_visits:
             try:
@@ -245,6 +247,5 @@ class DashboardView(
             except maternal_covid_screening_cls.DoesNotExist:
                 form = maternal_covid_screening_cls._meta.verbose_name
                 msg = mark_safe(
-                    f'Please complete {form} for visit {visit.visit_code} as '
-                    'it is indicated as a covid visit.')
+                    f'Please complete {form} for visit {visit.visit_code}.')
                 messages.add_message(self.request, messages.WARNING, msg)
