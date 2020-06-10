@@ -254,14 +254,13 @@ class DashboardView(
             appointment__subject_identifier=subject_identifier)
 
         for visit in infant_visits:
-            if visit.covid_visit == YES:
-                try:
-                    infant_covid_screening_cls.objects.get(
-                        infant_visit=visit)
-                except infant_covid_screening_cls.DoesNotExist:
-                    form = infant_covid_screening_cls._meta.verbose_name
-                    msg = mark_safe(
-                        f'Please complete {form} for visit {visit.visit_code} as '
-                        'it is indicated as a covid visit.')
-                    messages.add_message(self.request, messages.WARNING, msg)
+            try:
+                infant_covid_screening_cls.objects.get(
+                    infant_visit=visit)
+            except infant_covid_screening_cls.DoesNotExist:
+                form = infant_covid_screening_cls._meta.verbose_name
+                msg = mark_safe(
+                    f'Please complete {form} for visit {visit.visit_code} as '
+                    'it is indicated as a covid visit.')
+                messages.add_message(self.request, messages.WARNING, msg)
 
