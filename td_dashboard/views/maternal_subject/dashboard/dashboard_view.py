@@ -1,3 +1,4 @@
+from datetime import date
 from td_maternal.action_items import MATERNAL_LOCATOR_ACTION
 from td_maternal.helper_classes import MaternalStatusHelper
 from td_prn.action_items import MATERNALOFF_STUDY_ACTION
@@ -10,7 +11,6 @@ from django.core.exceptions import ValidationError
 from django.utils.safestring import mark_safe
 from edc_base.utils import get_utcnow
 from edc_base.view_mixins import EdcBaseViewMixin
-from edc_constants.constants import YES
 from edc_navbar import NavbarViewMixin
 from edc_registration.models import RegisteredSubject
 
@@ -238,7 +238,8 @@ class DashboardView(
 
         maternal_visits = maternal_visit_cls.objects.filter(
             appointment__subject_identifier=subject_identifier,
-            appointment__appt_status=IN_PROGRESS_APPT)
+            appointment__appt_status=IN_PROGRESS_APPT,
+            report_datetime__gte=date(2020, 4, 2))
 
         for visit in maternal_visits:
             try:
