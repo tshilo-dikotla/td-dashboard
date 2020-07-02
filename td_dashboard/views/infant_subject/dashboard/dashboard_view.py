@@ -1,3 +1,4 @@
+from datetime import date
 from td_dashboard.model_wrappers.infant_death_report_model_wrapper import InfantDeathReportModelWrapper
 from td_prn.action_items import INFANTOFF_STUDY_ACTION
 from td_prn.action_items import INFANT_DEATH_REPORT_ACTION
@@ -11,7 +12,6 @@ from django.utils.safestring import mark_safe
 from django.views.generic.base import ContextMixin
 from edc_base.utils import get_utcnow
 from edc_base.view_mixins import EdcBaseViewMixin
-from edc_constants.constants import YES
 from edc_navbar import NavbarViewMixin
 from edc_registration.models import RegisteredSubject
 
@@ -253,7 +253,8 @@ class DashboardView(
 
         infant_visits = infant_visit_cls.objects.filter(
             appointment__subject_identifier=subject_identifier,
-            appointment__appt_status=IN_PROGRESS_APPT)
+            appointment__appt_status=IN_PROGRESS_APPT,
+            report_datetime__gte=date(2020, 4, 2))
 
         for visit in infant_visits:
             try:
