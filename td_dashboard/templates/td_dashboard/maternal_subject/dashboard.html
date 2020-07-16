@@ -7,9 +7,13 @@
 
 {% block top_bar %}
 
-    {% include "td_dashboard/maternal_subject/dashboard/top_bar.html" %}
+   {% include "td_dashboard/maternal_subject/dashboard/top_bar.html" %}
 
 {% endblock top_bar %}
+
+{% block requisitions %}
+   {% include "td_dashboard/maternal_subject/dashboard/requisitions.html" %}
+{% endblock requisitions %}
 
 {% block dashboard_schedule_footer %}
 				
