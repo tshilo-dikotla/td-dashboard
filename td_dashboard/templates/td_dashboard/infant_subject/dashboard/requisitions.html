@@ -1,0 +1,20 @@
+{% extends 'edc_subject_dashboard/dashboard/requisitions.html' %}
+
+{%block keyed_requisition%}
+	{% if requisition.entry_status == KEYED %}
+		{% if requisition.object.is_drawn == YES and requisition.object.requisition_identifier %}
+			<span class="text text-success small">
+				<i class="fa fa-check fa-sm"></i>
+				{% if requisition.object.clinic_verified == YES %}<i class="fa fa-check fa-sm"></i>{% endif %}
+			</span> <span class="text text-default"><strong>{{ requisition.object.requisition_identifier}}</strong></span>
+		{% elif requisition.object.reason_not_drawn == NOT_REQUIRED %}
+			<span class="text text-info small"><i class="fa fa-info-circle"></i> no longer required</span>
+		{% elif requisition.object.requisition_identifier  and not requisition.object.is_drawn %}
+		<span class="text text-danger"><i class="fa fa-hand-stop-o fa-fw"></i> <strong>{{ requisition.object.requisition_identifier}}</strong></span>
+		{% elif requisition.object.is_drawn == NO %}
+			<span class="text text-info small">not drawn</span>
+		{% else %}
+			<span class="text text-danger small"><i class="fa fa-warning"></i> ERROR</span>
+		{% endif %}
+	{% endif %}
+{%endblock keyed_requisition%}
