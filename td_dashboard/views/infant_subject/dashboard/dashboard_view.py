@@ -181,6 +181,7 @@ class DashboardView(
     infant_links = False
     maternal_links = True
     special_forms_include_value = "td_dashboard/infant_subject/dashboard/special_forms.html"
+    odk_archive_forms_include_value = 'td_dashboard/infant_subject/dashboard/odk_archives.html'
     maternal_dashboard_include_value = "td_dashboard/maternal_subject/dashboard/maternal_dashboard_links.html"
     data_action_item_template = "td_dashboard/infant_subject/dashboard/data_manager.html"
 

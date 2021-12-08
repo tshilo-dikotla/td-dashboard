@@ -5,8 +5,12 @@ from django.core.exceptions import ObjectDoesNotExist
 from edc_base.utils import get_utcnow
 from edc_model_wrapper import ModelWrapper
 
+from .infant_clinician_notes_wrapper_mixin import InfantClinicianNotesModelWrapperMixin
+from .infant_labresults_wrapper_mixin import InfantLabResultsModelWrapperMixin
 
-class InfantBirthModelWrapper(ModelWrapper):
+
+class InfantBirthModelWrapper(InfantLabResultsModelWrapperMixin,
+                              InfantClinicianNotesModelWrapperMixin, ModelWrapper):
 
     model = 'td_infant.infantbirth'
     next_url_name = settings.DASHBOARD_URL_NAMES.get(

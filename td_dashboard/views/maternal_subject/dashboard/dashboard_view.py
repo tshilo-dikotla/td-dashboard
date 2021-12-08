@@ -48,6 +48,7 @@ class DashboardView(
     subject_locator_model_wrapper_cls = SubjectLocatorModelWrapper
     visit_model_wrapper_cls = MaternalVisitModelWrapper
     special_forms_include_value = "td_dashboard/maternal_subject/dashboard/special_forms.html"
+    odk_archive_forms_include_value = 'td_dashboard/maternal_subject/dashboard/odk_archives.html'
     mother_infant_study = True
     infant_links = True
     maternal_links = False

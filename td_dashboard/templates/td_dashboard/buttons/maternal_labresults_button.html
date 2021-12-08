@@ -1,0 +1,12 @@
+<a id="maternallabresults_add_{{ subject_identifier }}" 
+     title="{{ title }}"
+
+    {% if maternal_labresults_model_obj %}
+        class="btn btn-success btn-sm" data-toggle="tooltip"  data-placement="right"
+        href="{{ add_maternal_labresults_href }}">
+    {% else %}
+        class="btn btn-warning btn-sm" data-toggle="tooltip"  data-placement="right"
+        href="{{ add_maternal_labresults_href }}">
+    {% endif %}
+        Maternal Lab Results
+</a>

@@ -9,9 +9,49 @@ from edc_visit_schedule.models import SubjectScheduleHistory
 register = template.Library()
 
 
+@register.inclusion_tag('td_dashboard/buttons/maternal_notes_archives_button.html')
+def maternal_notes_archives_button(model_wrapper):
+    title = ['Edit maternal clinician notes.']
+    return dict(
+        subject_identifier=model_wrapper.subject_identifier,
+        add_maternal_clinician_notes_href=model_wrapper.maternal_clinician_notes.href,
+        maternal_clinician_notes_model_obj=model_wrapper.maternal_clinician_notes_model_obj,
+        title=' '.join(title),)
+
+
+@register.inclusion_tag('td_dashboard/buttons/maternal_labresults_button.html')
+def maternal_labresults_button(model_wrapper):
+    title = ['Edit maternal lab results.']
+    return dict(
+        subject_identifier=model_wrapper.subject_identifier,
+        add_maternal_labresults_href=model_wrapper.maternal_labresults.href,
+        maternal_labresults_model_obj=model_wrapper.maternal_labresults_model_obj,
+        title=' '.join(title),)
+
+
+@register.inclusion_tag('td_dashboard/buttons/infant_notes_archives_button.html')
+def infant_notes_archives_button(model_wrapper):
+    title = ['Edit infant clinician notes.']
+    return dict(
+        subject_identifier=model_wrapper.subject_identifier,
+        add_infant_clinician_notes_href=model_wrapper.infant_clinician_notes.href,
+        infant_clinician_notes_model_obj=model_wrapper.infant_clinician_notes_model_obj,
+        title=' '.join(title),)
+
+
+@register.inclusion_tag('td_dashboard/buttons/infant_labresults_button.html')
+def infant_labresults_button(model_wrapper):
+    title = ['Edit infant lab results.']
+    return dict(
+        subject_identifier=model_wrapper.subject_identifier,
+        add_infant_labresults_href=model_wrapper.infant_labresults.href,
+        infant_labresults_model_obj=model_wrapper.infant_labresults_model_obj,
+        title=' '.join(title),)
+
+
 @register.inclusion_tag('td_dashboard/buttons/karabo_screening_button.html')
 def karabo_screening_button(model_wrapper):
-    title = ['Edit subject\' Karabo screening form.']
+    title = ['Edit subject\'s Karabo screening form.']
     show_karabo_forms = (not model_wrapper.is_outside_schedule
                          and not model_wrapper.offstudy_obj)
 

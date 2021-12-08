@@ -7,15 +7,21 @@ from edc_model_wrapper import ModelWrapper
 
 from edc_consent import ConsentModelWrapperMixin
 from edc_consent.site_consents import site_consents
+from edc_odk.model_wrappers import OmangCopiesModelWrapperMixin
+from edc_odk.model_wrappers import NoteToFileModelWrapperMixin
+from edc_odk.model_wrappers import SpecimenConsentModelWrapperMixin as ODKSpecimenConsentModelWrapperMixin
+from edc_odk.model_wrappers import ConsentCopiesModelWrapperMixin
 from td_prn.action_items import MATERNALOFF_STUDY_ACTION
 
 from .antenantal_visit_membership_wrapper_mixin import AntenatalVisitMembershipWrapperMixin
 from .antenatal_enrollment_wrapper_mixin import AntenatalEnrollmentModelWrapperMixin
 from .karabo_subject_consent_mixin import KaraboSubjectConsentModelWrapperMixin
 from .karabo_subject_screening_mixin import KaraboScreeningModelWrapperMixin
+from .maternal_clinician_notes_wrapper_mixin import MaternalClinicianNotesModelWrapperMixin
 from .maternal_contact_model_wrapper_mixin import MaternalContactModelWrapperMixin
 from .maternal_death_report_wrapper_mixin import MaternalDeathReportModelWrapperMixin
 from .maternal_labour_del_wrapper_mixin import MaternalLabourDelModelWrapperMixin
+from .maternal_labresults_wrapper_mixin import MaternalLabResultsModelWrapperMixin
 from .maternal_locator_wrapper_mixin import MaternalLocatorModelWrapperMixin
 from .maternal_offstudy_wrapper_mixin import MaternalOffstudyModelWrapperMixin
 from .specimen_consent_model_wrapper_mixin import SpecimenConsentModelWrapperMixin
@@ -36,6 +42,12 @@ class SubjectScreeningModelWrapper(
         TDConsentVersionModelWrapperMixin,
         MaternalContactModelWrapperMixin,
         MaternalDeathReportModelWrapperMixin,
+        MaternalClinicianNotesModelWrapperMixin,
+        MaternalLabResultsModelWrapperMixin,
+        ODKSpecimenConsentModelWrapperMixin,
+        OmangCopiesModelWrapperMixin,
+        ConsentCopiesModelWrapperMixin,
+        NoteToFileModelWrapperMixin,
         ModelWrapper):
 
     consent_model_wrapper_cls = SubjectConsentModelWrapper
