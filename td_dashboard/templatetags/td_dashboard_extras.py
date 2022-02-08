@@ -11,7 +11,7 @@ register = template.Library()
 
 @register.inclusion_tag('td_dashboard/buttons/karabo_screening_button.html')
 def karabo_screening_button(model_wrapper):
-    title = ['Edit subject\' Karabo screening form.']
+    title = ['Edit subject\'s Karabo screening form.']
     show_karabo_forms = (not model_wrapper.is_outside_schedule
                          and not model_wrapper.offstudy_obj)
 

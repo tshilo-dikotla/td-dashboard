@@ -1,7 +1,19 @@
-{% extends 'edc_odk/odk_forms/sidebar.html' %}
+{% extends 'edc_subject_dashboard/dashboard/sidebar.html' %}
 
 {% load edc_prn_extras %}
 {% load action_item_extras %}
+
+{% block special_forms %}
+	{% if special_forms_include_value %}
+		{% include special_forms_include_value %}
+	{% endif %}
+{% endblock special_forms %}
+
+{% block odk_archive_forms %}
+	{% if odk_archive_forms_include_value %}
+		{% include odk_archive_forms_include_value %}
+	{% endif %}
+{% endblock odk_archive_forms %}
 
 {% block demographics %}   
 	
