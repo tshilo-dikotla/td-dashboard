@@ -295,3 +295,23 @@ def subject_schedule_footer_row(subject_identifier, visit_schedule, schedule,
         schedule=schedule,
         verbose_name=visit_schedule.offstudy_model_cls._meta.verbose_name)
     return context
+
+
+@register.inclusion_tag('td_dashboard/buttons/custom_clinician_notes_archives_button.html')
+def custom_clinician_notes_archives_button(model_wrapper):
+    """
+    Simply an override of the odk button with customized title 
+
+    Args:
+        model_wrapper (ModelWrapper) : Consent ModelWrapper
+
+    Returns:
+        dict[str, str]: context which will be used by custom_clinician_notes_archives_button html
+    """
+    title = ['Clinician Notes Archive']
+    return dict(
+        subject_identifier=model_wrapper.subject_identifier,
+        add_clinician_notes_href=model_wrapper.clinician_notes.href,
+        clinician_notes_model_obj=model_wrapper.clinician_notes_model_obj,
+        title=' '.join(title),)
+
