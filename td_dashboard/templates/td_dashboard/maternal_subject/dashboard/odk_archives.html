@@ -1,0 +1,24 @@
+{% load td_dashboard_extras %}
+{% load odk_dashboard_extras %}
+
+
+<table class="table table-condensed">
+	<tr>
+		<td>{% consent_copies_button consent %}</td>
+	</tr>
+	<tr>
+		<td>{% omang_copies_button consent %}</td>
+	</tr>
+	<tr>
+		<td>{% specimen_consent_button consent %}</td>
+	</tr>
+	<tr>
+		<td>{% note_to_file_button consent %}</td>
+	</tr>
+	<tr>
+		<td>{% custom_clinician_notes_archives_button consent %}</td>x
+	</tr>
+	<tr>
+		<td>{% labresults_button consent %}</td>
+	</tr>
+</table>

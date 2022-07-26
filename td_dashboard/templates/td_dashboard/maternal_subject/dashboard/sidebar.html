@@ -1,5 +1,21 @@
 {% extends 'edc_odk/odk_forms/maternal/sidebar.html' %}
 
+{% block consents %}
+    {% include 'edc_subject_dashboard/dashboard/sidebar/consents.html' %}
+{% endblock consents %}
+
+{% block special_forms %}
+	{% if special_forms_include_value %}
+		{% include special_forms_include_value %}
+	{% endif %}
+{% endblock special_forms %}
+
+{% block odk_archive_forms %}
+	{% if odk_archive_forms_include_value %}
+		{% include odk_archive_forms_include_value %}
+	{% endif %}
+{% endblock odk_archive_forms %}
+
 {% block demographics %}   
 	
     	{% include 'td_dashboard/maternal_subject/dashboard/demographics.html' %}
