@@ -57,6 +57,19 @@ class DashboardView(
     data_action_item_template = "td_dashboard/maternal_subject/dashboard/data_manager.html"
 
     @property
+    def report_datetime(self):
+        edc_protocol = django_apps.get_app_config('edc_protocol')
+        report_datetime = None
+        try:
+            report_datetime = self.appointment.visit.report_datetime
+        except AttributeError:
+            try:
+                report_datetime = self.appointment.appt_datetime
+            except AttributeError:
+                pass
+        return report_datetime or edc_protocol.study_close_datetime
+
+    @property
     def subject_screening(self):
         """Return a wrapped subject screening obj.
         """
