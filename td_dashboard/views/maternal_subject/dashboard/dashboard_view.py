@@ -67,7 +67,7 @@ class DashboardView(
                 report_datetime = self.appointment.appt_datetime
             except AttributeError:
                 pass
-        return report_datetime or edc_protocol.study_close_datetime
+        return report_datetime or edc_protocol.study_open_datetime
 
     @property
     def subject_screening(self):
